@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIZLAB TSUE — Arena Live Scoreboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans p-6 select-none">
+  <header class="flex justify-between items-center border-b border-slate-800 pb-4">
+    <div class="flex items-center space-x-4">
+      <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-black px-4 py-2 rounded-xl text-2xl tracking-widest shadow-2xl">
+        BIZLAB TSUE
+      </div>
+      <div>
+        <h1 class="text-xl font-black text-white flex items-center">
+          JONLI BOZOR ARENASI & SCOREBOARD
+          <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs bg-rose-600/30 text-rose-400 border border-rose-500/50 flex items-center">
+            <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 animate-ping"></span> JONLI EFIR
+          </span>
+        </h1>
+        <p class="text-xs text-slate-400">Toshkent Davlat Iqtisodiyot Universiteti — Biznes Boshqaruvi va Logistika Kafedrasi</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="text-right">
+        <div class="text-[11px] text-slate-500 uppercase font-bold">Turnir Bosqichi</div>
+        <div class="text-base font-black text-amber-400" id="sb-tourney-status">2-Chorak (Raund 2/4)</div>
+      </div>
+      <button onclick="document.documentElement.requestFullscreen()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold">
+        <i class="fa-solid fa-expand mr-1.5"></i> Fullscreen
+      </button>
+    </div>
+  </header>
+
+  <section class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 via-emerald-950/40 to-slate-900 border-2 border-emerald-500/60 rounded-3xl p-6 shadow-2xl flex flex-col justify-between">
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-[11px] font-black uppercase text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">1-Jamoa</span>
+          <h2 class="text-2xl font-black text-white mt-1" id="sb-a-name">Uzum Express</h2>
+          <p class="text-xs text-slate-400" id="sb-a-members">Boshqaruv Kengashi: MM-24</p>
+        </div>
+        <div class="text-3xl font-black text-emerald-400" id="sb-a-share">58.4%</div>
+      </div>
+      <div class="my-4 grid grid-cols-2 gap-4 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
+        <div><div class="text-[11px] text-slate-400">Kassa Qoldig'i</div><div class="text-xl font-black text-emerald-300" id="sb-a-treasury">284.5 mln</div></div>
+        <div><div class="text-[11px] text-slate-400">Buyurtmalar</div><div class="text-xl font-black text-white" id="sb-a-orders">14,600 ta</div></div>
+      </div>
+      <div class="flex justify-between text-xs font-bold"><span>Sof Foyda:</span><span class="text-emerald-400 text-sm font-black" id="sb-a-profit">+34.5 mln so'm</span></div>
+    </div>
+
+    <div class="lg:col-span-2 flex flex-col items-center justify-center">
+      <div class="w-14 h-14 rounded-full bg-slate-900 border-2 border-amber-500 flex items-center justify-center text-amber-400 font-black text-xl shadow-2xl">VS</div>
+      <div class="h-28 w-28 mt-3"><canvas id="sbPieChart"></canvas></div>
+    </div>
+
+    <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 via-rose-950/40 to-slate-900 border-2 border-rose-500/60 rounded-3xl p-6 shadow-2xl flex flex-col justify-between">
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-[11px] font-black uppercase text-rose-400 bg-rose-950 px-2 py-0.5 rounded border border-rose-800">2-Jamoa</span>
+          <h2 class="text-2xl font-black text-white mt-1" id="sb-b-name">Yandex / Express24</h2>
+          <p class="text-xs text-slate-400" id="sb-b-members">Boshqaruv Kengashi: MM-23</p>
+        </div>
+        <div class="text-3xl font-black text-rose-400" id="sb-b-share">41.6%</div>
+      </div>
+      <div class="my-4 grid grid-cols-2 gap-4 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
+        <div><div class="text-[11px] text-slate-400">Kassa Qoldig'i</div><div class="text-xl font-black text-rose-300" id="sb-b-treasury">235.0 mln</div></div>
+        <div><div class="text-[11px] text-slate-400">Buyurtmalar</div><div class="text-xl font-black text-white" id="sb-b-orders">10,400 ta</div></div>
+      </div>
+      <div class="flex justify-between text-xs font-bold"><span>Sof Foyda:</span><span class="text-rose-400 text-sm font-black" id="sb-b-profit">+15.2 mln so'm</span></div>
+    </div>
+  </section>
+
+  <section class="mt-6 bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl flex-1">
+    <h3 class="text-xs font-black uppercase text-white mb-3 flex items-center">
+      <i class="fa-solid fa-trophy text-amber-400 mr-2"></i> GURUHLARARO BOZOR CHEMPIONATI REYTINGI
+    </h3>
+    <table class="w-full text-left text-xs text-slate-300">
+      <thead class="text-[10px] uppercase bg-slate-950 text-slate-400 border-b border-slate-800">
+        <tr><th class="p-2.5 text-center">O'rin</th><th class="p-2.5">Jamoa</th><th class="p-2.5">Guruh</th><th class="p-2.5 text-center">G'alaba/Mag'lubiyat</th><th class="p-2.5 text-right">Kassa</th><th class="p-2.5 text-right">Ball</th></tr>
+      </thead>
+      <tbody id="sb-standings-body" class="divide-y divide-slate-800/60 font-semibold"></tbody>
+    </table>
+  </section>
+
+  <script>
+    let sbChart = null;
+    async function loadScoreboard() {
+      try {
+        const res = await fetch('/api/v1/battle/scoreboard');
+        const d = await res.json();
+        const a = d.active_match.team_a;
+        const b = d.active_match.team_b;
+
+        document.getElementById('sb-a-name').innerText = a.name;
+        document.getElementById('sb-a-members').innerText = a.members;
+        document.getElementById('sb-a-share').innerText = a.market_share + '%';
+        document.getElementById('sb-a-treasury').innerText = (a.treasury/1000000).toFixed(1) + ' mln';
+        document.getElementById('sb-a-orders').innerText = a.daily_orders.toLocaleString() + ' ta';
+        document.getElementById('sb-a-profit').innerText = (a.net_profit>=0?'+':'') + (a.net_profit/1000000).toFixed(1) + ' mln so\'m';
+
+        document.getElementById('sb-b-name').innerText = b.name;
+        document.getElementById('sb-b-members').innerText = b.members;
+        document.getElementById('sb-b-share').innerText = b.market_share + '%';
+        document.getElementById('sb-b-treasury').innerText = (b.treasury/1000000).toFixed(1) + ' mln';
+        document.getElementById('sb-b-orders').innerText = b.daily_orders.toLocaleString() + ' ta';
+        document.getElementById('sb-b-profit').innerText = (b.net_profit>=0?'+':'') + (b.net_profit/1000000).toFixed(1) + ' mln so\'m';
+
+        document.getElementById('sb-tourney-status').innerText = `${d.current_round}-Chorak (Raund ${d.current_round}/${d.total_rounds})`;
+
+        const ctx = document.getElementById('sbPieChart').getContext('2d');
+        if (sbChart) sbChart.destroy();
+        sbChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: { labels: [a.name, b.name], datasets: [{ data: [a.market_share, b.market_share], backgroundColor: ['#10b981', '#f43f5e'], borderWidth: 0 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '70%' }
+        });
+
+        const tbody = document.getElementById('sb-standings-body');
+        tbody.innerHTML = '';
+        d.standings.forEach(row => {
+          tbody.innerHTML += `
+            <tr class="hover:bg-slate-900">
+              <td class="p-2.5 text-center font-bold text-amber-400">${row.rank}</td>
+              <td class="p-2.5 font-bold text-white">${row.team}</td>
+              <td class="p-2.5 text-slate-400">${row.group}</td>
+              <td class="p-2.5 text-center"><span class="text-emerald-400">${row.wins}W</span> - <span class="text-rose-400">${row.losses}L</span></td>
+              <td class="p-2.5 text-right font-bold text-emerald-400">${(row.treasury/1000000).toFixed(0)} mln so'm</td>
+              <td class="p-2.5 text-right font-black text-indigo-400">${row.score} ball</td>
+            </tr>
+          `;
+        });
+      } catch(e) {}
+    }
+    window.onload = () => { loadScoreboard(); setInterval(loadScoreboard, 5000); };
+  </script>
+</body>
+</html>

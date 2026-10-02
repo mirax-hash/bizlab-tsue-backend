@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIZLAB TSUE PRO — 6 Modulli Virtual Biznes Laboratoriyasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .chat-scroll { max-height: 270px; overflow-y: auto; }
+    @media print {
+      body * { visibility: hidden; }
+      #printable-executive-deck, #printable-executive-deck * { visibility: visible; }
+      #printable-executive-deck { position: absolute; left: 0; top: 0; width: 100%; border: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-black px-3.5 py-1.5 rounded-xl text-lg tracking-wider shadow-lg">
+          BIZLAB
+        </div>
+        <div>
+          <h1 class="text-sm font-bold tracking-wide">BIZLAB TSUE PRO</h1>
+          <p class="text-[11px] text-slate-400">TDIU Virtual Biznes Simulyatori & Strategik Tadqiqot Markazi</p>
+        </div>
+      </div>
+      <!-- Asosiy Navigatsiya Menyusi -->
+      <div class="flex items-center space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs overflow-x-auto">
+        <button onclick="switchView('battle')" id="tab-battle" class="px-3 py-1.5 rounded-lg font-bold bg-rose-600 text-white shadow">1. Bozor Jangi</button>
+        <button onclick="switchView('lab')" id="tab-lab" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">2. Milliy Keyslar</button>
+        <button onclick="switchView('forensic')" id="tab-forensic" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">3. Balans Auditi</button>
+        <button onclick="switchView('eoq')" id="tab-eoq" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">4. Ta'minot & EOQ</button>
+        <button onclick="switchView('pricing')" id="tab-pricing" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">5. Dinamik Narx</button>
+        <button onclick="switchView('security')" id="tab-security" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">6. Xavfsizlik</button>
+        <button onclick="switchView('board')" id="tab-board" class="px-3 py-1.5 rounded-lg font-bold text-amber-400 hover:text-white border border-amber-500/30">
+          <i class="fa-solid fa-chess-king mr-1"></i> Boshqaruv Kengashi
+        </button>
+        <a href="/scoreboard" target="_blank" class="px-2.5 py-1.5 rounded-lg text-amber-400 hover:bg-slate-900" title="Proyektor Katta Ekrani"><i class="fa-solid fa-tv"></i></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Yagona Universial Qo'llanma Modali (Pop-up) -->
+  <div id="guide-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-3xl rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="p-2 rounded-xl bg-amber-500/20 text-amber-400 text-sm"><i class="fa-solid fa-circle-play"></i></span>
+          <div>
+            <h3 id="modal-title" class="text-sm font-bold text-white">Modul Yo'riqnomasi</h3>
+            <p id="modal-subtitle" class="text-[11px] text-slate-400">Nazariy asoslar va amaliy qo'llanma</p>
+          </div>
+        </div>
+        <button onclick="closeGuideModal()" class="text-slate-400 hover:text-white text-lg p-1.5"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- YouTube Video Player -->
+      <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-800 bg-black shadow-lg">
+        <iframe id="modal-video" class="w-full h-full" src="" title="Video dars" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <!-- Matnli Qo'llanma & Formula -->
+      <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+        <h4 class="font-bold text-amber-400 uppercase flex items-center">
+          <i class="fa-solid fa-book-open-reader mr-2"></i> Qisqa Metodik Tushuntirish:
+        </h4>
+        <div id="modal-content" class="text-slate-300 leading-relaxed space-y-2"></div>
+      </div>
+
+      <div class="text-right">
+        <button onclick="closeGuideModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">
+          Tushundim, amaliyotga o'tish →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+    <!-- 1-MODUL: BOZOR JANGI (ARENA) -->
+    <section id="view-battle" class="space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border border-rose-500/30 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-rose-600 text-white">DUEL LIVE</span>
+            <button onclick="openGuide('battle')" class="text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-amber-500/40 transition">
+              <i class="fa-solid fa-circle-question mr-1"></i> Video & Qo'llanma
+            </button>
+          </div>
+          <h2 class="text-xl font-black text-white mt-1">Uzum Express VS Yandex/Express24: Narx & Bozor Jangi</h2>
+          <p class="text-xs text-slate-300">Deterministik Kurno/Bertran raqobat modeli asosida jamoalararo duel.</p>
+        </div>
+        <div class="text-right">
+          <div class="text-[11px] text-slate-400 font-semibold uppercase">Turnir Raundi:</div>
+          <div class="text-lg font-black text-amber-400" id="battle-round-lbl">1-Chorak (Raund 1/4)</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-900 border-2 border-emerald-500/50 p-5 rounded-2xl space-y-4 shadow-xl">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold text-emerald-400 uppercase flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> 1-Jamoa: Uzum Express
+            </h3>
+            <span class="text-xs text-slate-400">Kassa: <strong id="treasury-a" class="text-emerald-400">250,000,000 so'm</strong></span>
+          </div>
+          <div class="text-xs space-y-3">
+            <div>Yetkazish narxi: <span id="v_a_p" class="font-bold text-emerald-400">14,000 so'm</span><input type="range" id="c_a_p" min="8000" max="22000" step="1000" value="14000" oninput="document.getElementById('v_a_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
+            <div>Marketing byudjeti: <span id="v_a_m" class="font-bold text-emerald-400">20,000,000 so'm</span><input type="range" id="c_a_m" min="5000000" max="45000000" step="2500000" value="20000000" oninput="document.getElementById('v_a_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
+            <div>Xizmat sifati investitsiyasi: <span id="v_a_q" class="font-bold text-emerald-400">12,000,000 so'm</span><input type="range" id="c_a_q" min="4000000" max="25000000" step="1000000" value="12000000" oninput="document.getElementById('v_a_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border-2 border-rose-500/50 p-5 rounded-2xl space-y-4 shadow-xl">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold text-rose-400 uppercase flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-400 mr-2 animate-pulse"></span> 2-Jamoa: Yandex / Express24
+            </h3>
+            <span class="text-xs text-slate-400">Kassa: <strong id="treasury-b" class="text-rose-400">250,000,000 so'm</strong></span>
+          </div>
+          <div class="text-xs space-y-3">
+            <div>Yetkazish narxi: <span id="v_b_p" class="font-bold text-rose-400">15,000 so'm</span><input type="range" id="c_b_p" min="8000" max="22000" step="1000" value="15000" oninput="document.getElementById('v_b_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
+            <div>Marketing byudjeti: <span id="v_b_m" class="font-bold text-rose-400">18,000,000 so'm</span><input type="range" id="c_b_m" min="5000000" max="45000000" step="2500000" value="18000000" oninput="document.getElementById('v_b_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
+            <div>Xizmat sifati investitsiyasi: <span id="v_b_q" class="font-bold text-rose-400">10,000,000 so'm</span><input type="range" id="c_b_q" min="4000000" max="25000000" step="1000000" value="10000000" oninput="document.getElementById('v_b_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button id="btn-run-duel" onclick="runDuelAction()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 via-rose-600 to-indigo-600 hover:opacity-95 text-white font-black rounded-xl text-xs shadow-2xl transition transform hover:scale-[1.01]">
+          <i class="fa-solid fa-bolt-lightning mr-2"></i> RAUND TO'QNASHUVINI HISOBLASH (JANG!)
+        </button>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <h4 class="text-xs font-bold text-slate-300 uppercase">To'qnashuv Natijasi</h4>
+          <span id="duel-winner-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-400">Jang boshlanmadi</span>
+        </div>
+        <div id="duel-analysis-text" class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
+          Ikkala jamoa parametrlarni tanlab, tugmani bosing.
+        </div>
+        <div class="grid grid-cols-2 gap-4 text-xs">
+          <div class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-xl space-y-1">
+            <div class="font-extrabold text-emerald-400 flex justify-between"><span>Uzum Express</span><span id="res-a-share">50%</span></div>
+            <div>Buyurtmalar: <strong id="res-a-orders" class="text-white">12,500 ta</strong></div>
+            <div>Sof Foyda: <strong id="res-a-profit" class="text-emerald-400">+25.0 mln</strong></div>
+          </div>
+          <div class="bg-rose-950/20 border border-rose-500/30 p-3 rounded-xl space-y-1">
+            <div class="font-extrabold text-rose-400 flex justify-between"><span>Yandex / Express24</span><span id="res-b-share">50%</span></div>
+            <div>Buyurtmalar: <strong id="res-b-orders" class="text-white">12,500 ta</strong></div>
+            <div>Sof Foyda: <strong id="res-b-profit" class="text-rose-400">+25.0 mln</strong></div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="h-40 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1">Bozor Ulushi (%)</span>
+            <canvas id="duelPieChart"></canvas>
+          </div>
+          <div class="h-40 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1">Sof Foyda (so'm)</span>
+            <canvas id="duelBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2-MODUL: MILLIY KEYSLAR (TO'LIQ 4 BOSQICH) -->
+    <section id="view-lab" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
+      <aside class="lg:col-span-4 space-y-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+          <h3 class="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center">
+            <i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i> Milliy Keyslar Banki
+          </h3>
+          <div id="missions-list" class="space-y-2 max-h-[48vh] overflow-y-auto pr-1"></div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-xl">
+          <h4 class="text-xs font-bold text-amber-400 uppercase flex items-center">
+            <i class="fa-solid fa-bolt mr-2 animate-bounce"></i> Bozor Zarbalari (Fors-major)
+          </h4>
+          <div id="shocks-container" class="space-y-2"></div>
+        </div>
+      </aside>
+
+      <section class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 shadow-xl">
+        <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
+          <div>
+            <span id="active-badge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Kategoriya</span>
+            <h2 id="active-title" class="text-lg font-black text-white mt-1">Keys Nomi</h2>
+            <p id="active-desc" class="text-xs text-slate-400 mt-1">Tavsif...</p>
+          </div>
+          <button onclick="openGuide('lab')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/40">
+            <i class="fa-solid fa-circle-question mr-1"></i> Qo'llanma
+          </button>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2 text-center text-xs font-semibold">
+          <button onclick="gotoLabStep(1)" id="lab-step-btn-1" class="py-2.5 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center">
+            <i class="fa-solid fa-circle-play text-base"></i><span class="text-[11px] mt-1">1. Dars & Video</span>
+          </button>
+          <button onclick="gotoLabStep(2)" id="lab-step-btn-2" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-clipboard-check text-base"></i><span class="text-[11px] mt-1">2. Test</span>
+          </button>
+          <button onclick="gotoLabStep(3)" id="lab-step-btn-3" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-sliders text-base"></i><span class="text-[11px] mt-1">3. Simulyatsiya</span>
+          </button>
+          <button onclick="gotoLabStep(4)" id="lab-step-btn-4" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-comments text-base"></i><span class="text-[11px] mt-1">4. SI Himoyasi</span>
+          </button>
+        </div>
+
+        <!-- 1-BOSQICH -->
+        <div id="lab-step-1" class="space-y-4">
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-800 bg-black">
+            <iframe id="video-frame" class="w-full h-full" src="" title="Video lecture" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
+            <h4 class="font-bold text-white mb-1"><i class="fa-solid fa-graduation-cap text-emerald-400 mr-1.5"></i> Keys vazifasi:</h4>
+            <p id="theory-text">Yuklanmoqda...</p>
+          </div>
+          <button onclick="gotoLabStep(2)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">
+            Mavzuni o'rgandim, Testga o'tish →
+          </button>
+        </div>
+
+        <!-- 2-BOSQICH -->
+        <div id="lab-step-2" class="space-y-4 hidden">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Situatsion Test Sinovi</h3>
+          <div id="quiz-container" class="space-y-3"></div>
+          <button onclick="submitQuizAction()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition">
+            Testni tekshirish
+          </button>
+          <div id="quiz-result-box" class="p-3 rounded-xl text-xs hidden"></div>
+        </div>
+
+        <!-- 3-BOSQICH -->
+        <div id="lab-step-3" class="space-y-5 hidden">
+          <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-white">Sohaviy Boshqaruv Simulyatori</h3>
+            <div id="lab-shock-alert" class="hidden text-xs bg-red-950 border border-red-500 text-red-300 px-3 py-1 rounded-lg font-bold">
+              Fors-major faol!
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div id="lab-dynamic-controls" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4"></div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between space-y-3">
+              <div id="lab-dynamic-kpis" class="grid grid-cols-3 gap-2 text-center border-b border-slate-800 pb-2"></div>
+              <div class="h-28 flex justify-center"><canvas id="classicBarChart"></canvas></div>
+              <div class="h-24 flex justify-center"><canvas id="classicPieChart"></canvas></div>
+            </div>
+          </div>
+          <button onclick="gotoLabStep(4)" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition shadow-lg">
+            Qarorni qabul qildim, SI bilan bahsga o'tish →
+          </button>
+        </div>
+
+        <!-- 4-BOSQICH: SI HIMOYASI -->
+        <div id="lab-step-4" class="space-y-4 hidden">
+          <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-white flex items-center">
+              <i class="fa-solid fa-graduation-cap text-purple-400 mr-2"></i> SI Kafedra Professori bilan Ilmiy Himoya (3 Raund)
+            </h3>
+            <span class="text-xs bg-purple-950 border border-purple-700 text-purple-300 px-2.5 py-0.5 rounded-full font-bold">
+              Bosqich: <span id="round-idx-lbl">1 / 3</span>
+            </span>
+          </div>
+          <div id="chat-box" class="chat-scroll space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs">
+            <div class="flex items-start space-x-2">
+              <div class="bg-purple-900/60 p-1.5 rounded-lg text-purple-300"><i class="fa-solid fa-user-tie"></i></div>
+              <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-200 max-w-[85%] shadow">
+                <strong>SI Professor:</strong> Assalomu alaykum! Simulyatsiya natijalaringizni ko'rib chiqdim. Nima sababdan aynan ushbu iqtisodiy parametrlarni tanladingiz? Bu tannarx va rentabellikka qanday ta'sir qildi?
+              </div>
+            </div>
+          </div>
+          <div class="flex space-x-2">
+            <input type="text" id="chat-input" onkeydown="if(event.key==='Enter') sendChatMsg()" class="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Iqtisodiy dalilingizni yozing (masalan: tannarx, rentabellik, kassa uzilishi)...">
+            <button onclick="sendChatMsg()" id="chat-send-btn" class="px-5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs transition flex items-center">
+              <i class="fa-solid fa-paper-plane mr-1.5"></i> Yuborish
+            </button>
+          </div>
+
+          <!-- Diplom Sertifikat -->
+          <div id="certificate-card" class="mt-4 hidden">
+            <div id="printable-certificate" class="p-6 bg-gradient-to-br from-slate-900 via-emerald-950/80 to-slate-900 border-2 border-emerald-500/80 rounded-2xl shadow-2xl text-center space-y-4">
+              <div class="flex justify-between items-center border-b border-emerald-800/60 pb-3">
+                <div class="text-left">
+                  <div class="text-xs font-black tracking-widest text-emerald-400">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</div>
+                  <div class="text-[10px] text-slate-400">"Biznes boshqaruvi va logistika" kafedrasi</div>
+                </div>
+                <div class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded text-xs font-bold border border-emerald-500/30">BIZLAB VERIFIED</div>
+              </div>
+              <h3 class="text-lg font-black text-white mt-1">STRATEGIK BIZNES QARORLAR HIMOYASI</h3>
+              <p class="text-xs text-slate-300 max-w-lg mx-auto">
+                Ushbu sertifikat egasi virtual laboratoriyada <span class="text-emerald-400 font-bold" id="cert-mission-name">Keys</span> bo'yicha simulyatsiya va SI himoyasini muvaffaqiyatli yakunlaganini tasdiqlaydi.
+              </p>
+              <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs">
+                <div><div class="text-[10px] text-slate-500">Talaba</div><div class="font-bold text-white">Mirzarakhim B.</div></div>
+                <div><div class="text-[10px] text-slate-500">Yakuniy Ball</div><div class="font-bold text-emerald-400" id="cert-score-lbl">98 / 100</div></div>
+                <div><div class="text-[10px] text-slate-500">Sana</div><div class="font-bold text-slate-300" id="cert-date-lbl">Bugun</div></div>
+              </div>
+              <div class="flex justify-between items-center pt-2">
+                <div class="font-mono text-[11px] text-emerald-400 font-bold" id="cert-id-lbl">TSUE-BIZLAB-XXXX</div>
+                <img id="cert-qr-img" src="" alt="QR" class="w-14 h-14 rounded border border-slate-700 bg-white p-1">
+              </div>
+              <button onclick="window.print()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg">
+                <i class="fa-solid fa-file-pdf mr-2"></i> Sertifikatni PDF formatida chop etish
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- 3-MODUL: BALANS AUDITI -->
+    <section id="view-forensic" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-800">MODUL #3: FORENSIC</span>
+          <h2 class="text-lg font-black text-white mt-1">Inqirozdagi Korxona Balansini Qutqarish & Kassa Uzilishi Auditi</h2>
+          <p class="text-xs text-slate-400">Dastlabki kassa defitsiti: -60 mln so'm/oy. Xarajatlar va qarz yuklamasini optimallashtiring.</p>
+        </div>
+        <button onclick="openGuide('forensic')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/40">
+          <i class="fa-solid fa-circle-question mr-1"></i> Video & Formula
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <h4 class="font-bold text-white">Antikrizis Richaglari</h4>
+          <div>Ma'muriy xarajatlarni qisqartirish: <span id="v_fa_admin" class="text-emerald-400 font-bold">20%</span><input type="range" id="c_fa_admin" min="0" max="50" value="20" oninput="document.getElementById('v_fa_admin').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div>Kredit to'lovini restrukturizatsiya qilish: <span id="v_fa_debt" class="text-emerald-400 font-bold">12 oy</span><input type="range" id="c_fa_debt" min="0" max="24" value="12" oninput="document.getElementById('v_fa_debt').innerText=this.value+' oy'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div>Shtatni optimallashtirish: <span id="v_fa_staff" class="text-emerald-400 font-bold">15%</span><input type="range" id="c_fa_staff" min="0" max="40" value="15" oninput="document.getElementById('v_fa_staff').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div>Sekin aylanuvchi zaxiralarni sotish: <span id="v_fa_inv" class="text-emerald-400 font-bold">25%</span><input type="range" id="c_fa_inv" min="0" max="30" value="25" oninput="document.getElementById('v_fa_inv').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
+        </div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+          <h4 class="font-bold text-white">Audit Xulosasi</h4>
+          <div class="space-y-2">
+            <div>Dastlabki Kassa Uzilishi: <strong class="text-red-400">-60,000,000 so'm</strong></div>
+            <div>Tejalgan oylik mablag': <strong id="fa_saved" class="text-emerald-400">0 so'm</strong></div>
+            <div>Yakuniy Sof Pul Oqimi: <strong id="fa_cf" class="text-white text-sm">0 so'm</strong></div>
+            <div id="fa_verdict" class="p-3 rounded-lg font-bold">Hisoblanmoqda...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-MODUL: TA'MINOT & EOQ -->
+    <section id="view-eoq" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-400 border border-indigo-800">MODUL #4: SUPPLY CHAIN</span>
+          <h2 class="text-lg font-black text-white mt-1">Optimal Buyurtma Hajmi (EOQ & Safety Stock)</h2>
+          <p class="text-xs text-slate-400">Raqamlarni o'zgartiring — optimal partiya va xarajatlar darhol qayta hisoblanadi.</p>
+        </div>
+        <button onclick="openGuide('eoq')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/40">
+          <i class="fa-solid fa-circle-question mr-1"></i> Video & Formula
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-300">Yillik talab (Dona):</label>
+            <input type="number" id="c_eoq_d" value="24000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-300">Har bir buyurtma xarajati (so'm):</label>
+            <input type="number" id="c_eoq_s" value="250000" min="50000" step="25000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-300">1 dona tovarning yillik saqlash xarajati (so'm):</label>
+            <input type="number" id="c_eoq_h" value="12000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-300">Yetkazib berish muddati (Kun):</label>
+            <input type="number" id="c_eoq_l" value="5" min="1" max="30" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
+          </div>
+        </div>
+        
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col justify-between space-y-4 text-xs">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <h4 class="font-bold text-white text-sm">EOQ Matematik Xulosasi</h4>
+              <span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 text-[10px] font-bold border border-indigo-800">Jonli hisob</span>
+            </div>
+            <div class="space-y-2.5">
+              <div class="flex justify-between"><span>Optimal partiya hajmi (EOQ):</span><strong id="eoq_val" class="text-emerald-400 text-sm">1,000 dona</strong></div>
+              <div class="flex justify-between"><span>Yillik buyurtmalar soni:</span><strong id="eoq_orders" class="text-white">24.0 marta</strong></div>
+              <div class="flex justify-between"><span>Xavfsizlik zaxirasi (Safety Stock):</span><strong id="eoq_safety" class="text-indigo-400">48 dona</strong></div>
+              <div class="flex justify-between"><span>Qayta buyurtma nuqtasi (Reorder Point):</span><strong id="eoq_rop" class="text-amber-400">377 dona</strong></div>
+              <div class="flex justify-between border-t border-slate-800 pt-2"><span>Yillik jami saqlash xarajati:</span><strong id="eoq_cost" class="text-emerald-300 text-sm">12.0 mln so'm</strong></div>
+            </div>
+          </div>
+          <div class="h-32 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1">Buyurtma vs Saqlash Xarajatlari Balansi</span>
+            <canvas id="eoqChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5-MODUL: DINAMIK NARX -->
+    <section id="view-pricing" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-teal-950 text-teal-400 border border-teal-800">MODUL #5: PRICING</span>
+          <h2 class="text-lg font-black text-white mt-1">Talab Elastikligi Asosida Dinamik Narx Belgilash</h2>
+          <p class="text-xs text-slate-400">Narx o'zgarishi ($E_d$) ning sotuv hajmi va sof foydaga ta'siri.</p>
+        </div>
+        <button onclick="openGuide('pricing')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/40">
+          <i class="fa-solid fa-circle-question mr-1"></i> Video & Formula
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div>Narx o'zgarishi: <span id="v_pr_change" class="text-emerald-400 font-bold">+10%</span><input type="range" id="c_pr_change" min="-30" max="30" value="10" oninput="document.getElementById('v_pr_change').innerText=(this.value>0?'+':'')+this.value+'%'; runPricingAction()" class="w-full accent-emerald-500"></div>
+          <div>Talab elastikligi (Ed): <input type="number" step="0.1" id="c_pr_ed" value="-1.6" oninput="runPricingAction()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-white"></div>
+        </div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div>Yangi sotish narxi: <strong id="pr_price" class="text-emerald-400">0 so'm</strong></div>
+          <div>Kutilayotgan sotuv hajmi: <strong id="pr_vol" class="text-white">0 dona</strong></div>
+          <div>Sof Foyda O'zgarishi: <strong id="pr_profit" class="text-sm">0 so'm</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6-MODUL: XAVFSIZLIK STRESS-TEST -->
+    <section id="view-security" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">MODUL #6: SECURITY</span>
+          <h2 class="text-lg font-black text-white mt-1">Iqtisodiy Xavfsizlik & Komplayens Stress-Testi</h2>
+          <p class="text-xs text-slate-400">Valyuta devalvatsiyasi va bojxona to'siqlari sharoitida korxona barqarorligi.</p>
+        </div>
+        <button onclick="openGuide('security')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-xl border border-amber-500/40">
+          <i class="fa-solid fa-circle-question mr-1"></i> Video & Formula
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div>So'm devalvatsiyasi (%): <span id="v_sec_fx" class="text-amber-400 font-bold">20%</span><input type="range" id="c_sec_fx" min="0" max="50" value="20" oninput="document.getElementById('v_sec_fx').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500"></div>
+          <div>Bojxona tarifi (%): <span id="v_sec_tax" class="text-amber-400 font-bold">15%</span><input type="range" id="c_sec_tax" min="0" max="30" value="15" oninput="document.getElementById('v_sec_tax').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500"></div>
+          <div>Xavfsizlik zaxira fondi: <input type="number" id="c_sec_fund" value="50000000" oninput="runSecurityAction()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-white"></div>
+        </div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div>Jami Xavf Yuklamasi: <strong id="sec_risk" class="text-red-400">0 so'm</strong></div>
+          <div>Chidamlilik Indeksi (Survival Score): <strong id="sec_score" class="text-sm font-black">0 / 100</strong></div>
+          <div id="sec_status" class="p-3 rounded-lg font-bold">Baho kutilmoqda...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. BOSHQARUV KENGASHI (BOARD PITCH) -->
+    <section id="view-board" class="space-y-6 hidden">
+      <!-- Modul Banneri -->
+      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/40 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold">YAKUNIY STRATEGIYA</span>
+            <button onclick="openGuide('board')" class="text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-amber-500/40 transition">
+              <i class="fa-solid fa-circle-question mr-1"></i> Qanday ishlaydi?
+            </button>
+          </div>
+          <h2 class="text-xl font-black text-white mt-1">Boshqaruv Kengashi va Aksiyadorlarga Hisobot</h2>
+          <p class="text-xs text-slate-300">Oldingi 6 ta modulda qabul qilgan qarorlaringiz ushbu yerda yagona korxona qiymatiga birlashadi.</p>
+        </div>
+        <button onclick="runBoardEvaluationAction()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-black rounded-xl text-xs shadow-xl transition transform hover:scale-105">
+          <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Ko'rsatkichlarni Yangilash
+        </button>
+      </div>
+
+      <!-- 1-BLOK: 6 MODULNING ANIQ INTEGRATSIYA XARITASI (PIPELINE) -->
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
+        <h3 class="text-xs font-bold text-amber-400 uppercase flex items-center">
+          <i class="fa-solid fa-network-wired mr-2"></i> 1-Qadam: 6 Moduldan Olingan Ko'rsatkichlar (Sizning Natijalaringiz)
+        </h3>
+        <p class="text-[11px] text-slate-400">Har bir modulda o'rnatgan slayderlaringiz korxonaning umumiy EBITDA va barqarorligiga quyidagicha ta'sir qildi:</p>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-500">1. Bozor Jangi Foydasi</div>
+            <div id="pipe-battle" class="font-bold text-emerald-400 text-sm mt-0.5">+25.0 mln</div>
+            <div class="text-[9px] text-slate-500">Uzum Express choraklik foydasi</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-500">3. Balans Oylik Oqimi</div>
+            <div id="pipe-cf" class="font-bold text-emerald-400 text-sm mt-0.5">+15.0 mln</div>
+            <div class="text-[9px] text-slate-500">Kassa uzilishidan qolgan pul</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-500">4. Yillik EOQ Xarajati</div>
+            <div id="pipe-eoq" class="font-bold text-indigo-400 text-sm mt-0.5">12.0 mln</div>
+            <div class="text-[9px] text-slate-500">Ombor va zaxira xarajati</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-500">5. Narx Marjasi Farqi</div>
+            <div id="pipe-pricing" class="font-bold text-teal-400 text-sm mt-0.5">+8.0 mln</div>
+            <div class="text-[9px] text-slate-500">Elastiklikdan olingan foyda</div>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-slate-500">6. Chidamlilik Indeksi</div>
+            <div id="pipe-sec" class="font-bold text-amber-400 text-sm mt-0.5">78 / 100</div>
+            <div class="text-[9px] text-slate-500">Devalvatsiyaga qarshi bufer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-BLOK: ANIQ MOLIYAVIY HISOB VA MULTIPLIKATORLAR -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <div class="text-slate-400">Yillik Operatsion Foyda (EBITDA)</div>
+          <div id="board-ebitda" class="text-xl font-black text-emerald-400 mt-1">0 so'm</div>
+          <p class="text-[10px] text-slate-500 mt-1">Formula: (Duel×4) + (CF×12) + Narx - (EOQ×0.5)</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <div class="text-slate-400">Korxona Bozor Qiymati (Valuation)</div>
+          <div id="board-valuation" class="text-xl font-black text-white mt-1">0 so'm</div>
+          <p class="text-[10px] text-slate-500 mt-1" id="board-multiple-lbl">Multiplikator: 5.8x EBITDA</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+          <div class="text-slate-400">Yakuniy Kengash Qarori</div>
+          <div id="board-score" class="text-xl font-black text-amber-400 mt-1">-- / 100</div>
+          <div id="board-verdict" class="text-[11px] font-bold text-emerald-400 mt-1 uppercase">MA'QULLANDI</div>
+        </div>
+      </div>
+
+      <!-- 3-BLOK: DIREKTORLAR RETSENZIYASI VA GRAFIK -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-3">
+          <h3 class="text-xs font-bold text-white uppercase flex items-center">
+            <i class="fa-solid fa-user-tie text-amber-400 mr-2"></i> 2-Qadam: Mustaqil C-Level Direktorlar Xulosasi
+          </h3>
+          <p class="text-[11px] text-slate-400">Kengash a'zolari sizning qarorlaringiz bo'yicha quyidagi xulosalarga kelishdi:</p>
+          <div id="board-reviews-container" class="space-y-3 pt-1"></div>
+        </div>
+
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xs font-bold text-white uppercase flex items-center">
+              <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i> 3-Qadam: 3 Yillik Kapitallashuv Prognozi
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-1">Ushbu model bo'yicha kompaniyaning kelgusi 3 yildagi bozor qiymati dinamikasi:</p>
+          </div>
+          <div class="h-56 flex justify-center">
+            <canvas id="boardValuationChart"></canvas>
+          </div>
+          <button onclick="window.print()" class="w-full py-2.5 bg-slate-950 border border-amber-500/50 hover:bg-slate-900 text-amber-300 font-bold rounded-xl text-xs transition">
+            <i class="fa-solid fa-file-invoice-dollar mr-2"></i> 1 Varaqli Strategik Memorandumni Chop Etish (PDF)
+          </button>
+        </div>
+      </div>
+
+      <!-- Chop etish uchun yashirin shablon -->
+      <div id="printable-executive-deck" class="hidden">
+        <div class="p-8 bg-white text-slate-900 space-y-4">
+          <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-black">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</h2>
+              <p class="text-xs text-slate-600">BIZLAB Virtual Biznes Laboratoriyasi — Boshqaruv Kengashi Memorandumi</p>
+            </div>
+            <div class="text-right text-xs">
+              <strong>Sana:</strong> 2026-yil, Bugun<br>
+              <strong>Boshqaruvchi:</strong> Mirzarakhim B.
+            </div>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800">Ijroiya Strategik Hisobot (Executive Summary)</h3>
+          <p class="text-xs leading-relaxed text-slate-700">
+            Mazkur hisobot talaba tomonidan 6 ta biznes modulida qabul qilingan qarorlar sintezini aks ettiradi.
+          </p>
+          <div class="grid grid-cols-3 gap-3 border border-slate-300 p-3 rounded text-xs">
+            <div><strong>Yillik EBITDA:</strong> <span id="print-ebitda">0 so'm</span></div>
+            <div><strong>Kapitallashuv:</strong> <span id="print-valuation">0 so'm</span></div>
+            <div><strong>Kengash Bahosi:</strong> <span id="print-score">-- / 100</span></div>
+          </div>
+          <div class="text-xs space-y-2 pt-2">
+            <h4 class="font-bold uppercase border-b pb-1">Direktorlar Xulosasi:</h4>
+            <div id="print-reviews-box" class="space-y-1"></div>
+          </div>
+          <div class="pt-8 flex justify-between text-xs font-bold border-t">
+            <div>Ilmiy Rahbar: _____________________</div>
+            <div>Kafedra Mudiri: _____________________</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // HAR BIR MODUL UCHUN VIDEO VA METODIK MA'LUMOTLAR BAZASI
+    const guidesDatabase = {
+      battle: {
+        title: "1-Modul: Bozor Jangi (Arena) Metodikasi",
+        subtitle: "Kurno va Bertran oligopoliya modellari asosidagi narx jangi",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Nazariy asos:</strong> Ushbu duelda narx elastikligi, marketing kuchi va xizmat sifati bozor ulushini aniqlaydi.</p>
+          <p><strong>Asosiy qoidalar:</strong></p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-300">
+            <li><strong>Narx dempingi:</strong> Narxni keskin tushirish buyurtmalarni oshiradi, biroq birlik rentabellikni pasaytiradi.</li>
+            <li><strong>Marketing & Sifat balansi:</strong> Reklama yangi mijoz olib kelsa, sifat ularning qayta xaridini ta'minlaydi.</li>
+            <li><strong>G'oliblik mezoni:</strong> 4 ta chorak yakunida kassasida eng ko'p sof pul jamg'argan jamoa chempion bo'ladi.</li>
+          </ul>
+        `
+      },
+      lab: {
+        title: "2-Modul: Milliy Keyslar va SI Himoyasi",
+        subtitle: "4 bosqichli keys tahlili: Video dars → Test → Simulyator → Ilmiy himoya",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Bosqichlar ketma-ketligi:</strong></p>
+          <ol class="list-decimal pl-5 space-y-1 text-slate-300">
+            <li><strong>1-qadam (Video & Teoriya):</strong> Korxona holatini va muammoni o'rganing.</li>
+            <li><strong>2-qadam (Test):</strong> Situatsion testni kamida 50% ga topshiring.</li>
+            <li><strong>3-qadam (Simulyatsiya):</strong> Richaglarni o'zgartiring va fors-major zarbasiga qarshi optimal nuqtani toping.</li>
+            <li><strong>4-qadam (SI Himoyasi):</strong> SI Professor bilan 3 raundlik ilmiy bahsda qaroringizni aniq ko'rsatkichlar (tannarx, rentabellik, kassa zaxirasi) orqali asoslang.</li>
+          </ol>
+        `
+      },
+      forensic: {
+        title: "3-Modul: Balans Auditi va Kassa Uzilishi (Turnaround)",
+        subtitle: "Kassa defitsitini (-60 mln so'm) yopish va operatsion oqimni tiklash",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Iqtisodiy formula:</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-emerald-400">Sof Pul Oqimi = Tushum - (COGS + Ma'muriy + Oylik fondi + Qarz to'lovi)</p>
+          <p><strong>Boshqaruv strategiyasi:</strong></p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-300">
+            <li>Ma'muriy xarajatlarni qisqartirish likvidlikni saqlaydi.</li>
+            <li>Bank kreditini restrukturizatsiya qilish oylik qarz yuki bosimini kamaytiradi.</li>
+            <li>Sekin aylanuvchi zaxiralarni chegirma bilan sotish kassaga tezkor naqd pul (Cash Injection) olib keladi.</li>
+          </ul>
+        `
+      },
+      eoq: {
+        title: "4-Modul: Ta'minot Zanjiri & Optimal Partiya (EOQ)",
+        subtitle: "Uilson modeli: Buyurtma va saqlash xarajatlari o'rtasidagi optimal nuqta",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Klassik EOQ formulasi:</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-indigo-400">EOQ = √((2 × D × S) / H)</p>
+          <p>bu yerda: <em>D</em> — yillik talab, <em>S</em> — buyurtma berish xarajati, <em>H</em> — 1 dona tovarning yillik saqlash qiymati.</p>
+          <p><strong>Qayta buyurtma nuqtasi (Reorder Point):</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-amber-400">ROP = (Kunlik talab × Yetkazish muddati) + Safety Stock</p>
+        `
+      },
+      pricing: {
+        title: "5-Modul: Dinamik Narx va Talab Elastikligi (Ed)",
+        subtitle: "Narxning o'zgarishi sotuv hajmi va yalpi marjaga qanday ta'sir qiladi?",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Talabning narx elastikligi formulasi:</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-teal-400">Ed = (% Talab hajmi o'zgarishi) / (% Narx o'zgarishi)</p>
+          <p><strong>Strategik qoida:</strong></p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-300">
+            <li>Agar <em>|Ed| > 1</em> (Elastik) bo'lsa: Narxni tushirish umumiy tushum va foydani oshiradi.</li>
+            <li>Agar <em>|Ed| < 1</em> (Noelastik) bo'lsa: Narxni oshirish sotuv hajmini deyarli yo'qotmasdan marjani ko'paytiradi.</li>
+          </ul>
+        `
+      },
+      security: {
+        title: "6-Modul: Iqtisodiy Xavfsizlik va Stress-Test",
+        subtitle: "Makroiqtisodiy xatarlar (Valyuta devalvatsiyasi va Bojxona to'siqlari)ga qarshi korxona chidamliligi",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Xavf yuki formulasi:</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-red-400">Total Risk = Import × (% Devalvatsiya + % Bojxona tarifi)</p>
+          <p><strong>Chidamlilik Indeksi (Survival Score):</strong></p>
+          <p>Agar korxonaning zaxira fondi ushbu xavf yukini 70% dan ortiq qoplasa, korxona "Himoyalangan" hisoblanadi. Aks holda korxona defitsit xavfi ostida qoladi.</p>
+        `
+      },
+      board: {
+        title: "7-Modul: Boshqaruv Kengashi (Board Pitch)",
+        subtitle: "Barcha 6 modul natijalarini korxona qiymati (Valuation) va C-Level retsenziyasiga aylantirish",
+        video_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        content: `
+          <p><strong>Korporativ baholash:</strong></p>
+          <p class="font-mono bg-slate-900 p-2 rounded text-amber-400">Company Valuation = Yillik EBITDA × (4.2 + Survival_Score / 50)</p>
+          <p><strong>C-Level Direktorlar vazifalari:</strong></p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-300">
+            <li><strong>CFO:</strong> Kassa oqimi musbat bo'lishini va qarz yuklamasini qat'iy nazorat qiladi.</li>
+            <li><strong>COO:</strong> Ombor va yetkazib berish xarajatlari me'yordan oshmaganini tekshiradi.</li>
+            <li><strong>CRO:</strong> Devalvatsiya va kutilmagan bozor zarbalariga zaxira fondi yetarliligini baholaydi.</li>
+          </ul>
+        `
+      }
+    };
+
+    function openGuide(moduleKey) {
+      const g = guidesDatabase[moduleKey];
+      if (!g) return;
+      document.getElementById('modal-title').innerText = g.title;
+      document.getElementById('modal-subtitle').innerText = g.subtitle;
+      document.getElementById('modal-video').src = g.video_url;
+      document.getElementById('modal-content').innerHTML = g.content;
+      document.getElementById('guide-modal').classList.remove('hidden');
+    }
+
+    function closeGuideModal() {
+      document.getElementById('guide-modal').classList.add('hidden');
+      document.getElementById('modal-video').src = "";
+    }
+
+    let duelRound = 1;
+    let treasuryA = 250000000;
+    let treasuryB = 250000000;
+    let duelPieInst = null;
+    let duelBarInst = null;
+    let eoqChartInst = null;
+    let boardChartInst = null;
+
+    let missions = [];
+    let activeMission = null;
+    let activeShock = null;
+    let classicBarInst = null;
+    let classicPieInst = null;
+    let chatHistory = [];
+    let labRound = 1;
+
+    window.lastMetrics = {
+      battle_profit: 25000000.0,
+      forensic_cash_flow: 15000000.0,
+      eoq_annual_cost: 12000000.0,
+      pricing_profit_delta: 8000000.0,
+      survival_score: 78
+    };
+
+    function switchView(tab) {
+      ['battle', 'lab', 'forensic', 'eoq', 'pricing', 'security', 'board'].forEach(k => {
+        document.getElementById(`view-${k}`).classList.add('hidden');
+        document.getElementById(`tab-${k}`).className = 'px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white';
+      });
+      document.getElementById(`view-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-${tab}`).className = 'px-3 py-1.5 rounded-lg font-bold bg-rose-600 text-white shadow';
+
+      if (tab === 'lab' && missions.length === 0) loadMissionsData();
+      if (tab === 'forensic') runForensicAction();
+      if (tab === 'eoq') runEOQAction();
+      if (tab === 'pricing') runPricingAction();
+      if (tab === 'security') runSecurityAction();
+      if (tab === 'board') runBoardEvaluationAction();
+    }
+
+    // 1. BOZOR JANGI
+    async function runDuelAction() {
+      const payload = {
+        round_number: duelRound,
+        team_a: { name: "Uzum Express", price: parseInt(document.getElementById('c_a_p').value), marketing: parseInt(document.getElementById('c_a_m').value), quality: parseInt(document.getElementById('c_a_q').value) },
+        team_b: { name: "Yandex / Express24", price: parseInt(document.getElementById('c_b_p').value), marketing: parseInt(document.getElementById('c_b_m').value), quality: parseInt(document.getElementById('c_b_q').value) }
+      };
+
+      const res = await fetch('/api/v1/battle/play-round', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+      const d = await res.json();
+
+      window.lastMetrics.battle_profit = d.team_a.net_profit;
+
+      document.getElementById('res-a-share').innerText = d.team_a.market_share + '%';
+      document.getElementById('res-a-orders').innerText = d.team_a.orders.toLocaleString() + ' ta';
+      document.getElementById('res-a-profit').innerText = (d.team_a.net_profit >= 0 ? '+' : '') + (d.team_a.net_profit / 1000000).toFixed(1) + ' mln so\'m';
+      document.getElementById('res-a-profit').className = d.team_a.net_profit >= 0 ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold';
+
+      document.getElementById('res-b-share').innerText = d.team_b.market_share + '%';
+      document.getElementById('res-b-orders').innerText = d.team_b.orders.toLocaleString() + ' ta';
+      document.getElementById('res-b-profit').innerText = (d.team_b.net_profit >= 0 ? '+' : '') + (d.team_b.net_profit / 1000000).toFixed(1) + ' mln so\'m';
+      document.getElementById('res-b-profit').className = d.team_b.net_profit >= 0 ? 'text-rose-400 font-bold' : 'text-red-400 font-bold';
+
+      document.getElementById('duel-analysis-text').innerText = d.analysis;
+
+      const badge = document.getElementById('duel-winner-badge');
+      if (d.winner === 'team_a') { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-emerald-950 border border-emerald-500 text-emerald-300'; badge.innerText = "Uzum Express yutdi!"; }
+      else if (d.winner === 'team_b') { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300'; badge.innerText = "Yandex yutdi!"; }
+      else { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-300'; badge.innerText = "Durang!"; }
+
+      treasuryA += d.team_a.net_profit;
+      treasuryB += d.team_b.net_profit;
+      document.getElementById('treasury-a').innerText = treasuryA.toLocaleString() + " so'm";
+      document.getElementById('treasury-b').innerText = treasuryB.toLocaleString() + " so'm";
+
+      updateDuelCharts(d.team_a, d.team_b);
+
+      if (duelRound < 4) {
+        duelRound++;
+        document.getElementById('battle-round-lbl').innerText = `${duelRound}-Chorak (Raund ${duelRound}/4)`;
+      } else {
+        const win = treasuryA > treasuryB ? "1-Jamoa (Uzum)" : "2-Jamoa (Yandex)";
+        alert(`Chempionat yakunlandi!\n\nG'olib: ${win}`);
+      }
+    }
+
+    function updateDuelCharts(a, b) {
+      const pCtx = document.getElementById('duelPieChart').getContext('2d');
+      if (duelPieInst) duelPieInst.destroy();
+      duelPieInst = new Chart(pCtx, {
+        type: 'doughnut',
+        data: { labels: ['Uzum Express', 'Yandex / Express24'], datasets: [{ data: [a.market_share, b.market_share], backgroundColor: ['#10b981', '#f43f5e'] }] },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      const bCtx = document.getElementById('duelBarChart').getContext('2d');
+      if (duelBarInst) duelBarInst.destroy();
+      duelBarInst = new Chart(bCtx, {
+        type: 'bar',
+        data: { labels: ['Uzum Express', 'Yandex / Express24'], datasets: [{ data: [a.net_profit, b.net_profit], backgroundColor: [a.net_profit>=0?'#10b981':'#ef4444', b.net_profit>=0?'#f43f5e':'#ef4444'], borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+
+    // 2. MILLIY KEYSLAR
+    async function loadMissionsData() {
+      const res = await fetch('/api/v1/missions');
+      missions = await res.json();
+      const list = document.getElementById('missions-list');
+      list.innerHTML = '';
+
+      missions.forEach(m => {
+        const item = document.createElement('div');
+        item.className = `p-3 rounded-xl border cursor-pointer transition ${activeMission && activeMission.id === m.id ? 'bg-emerald-950/60 border-emerald-500' : 'bg-slate-950 hover:bg-slate-900 border-slate-800'}`;
+        item.onclick = () => selectMission(m);
+        item.innerHTML = `
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[10px] font-bold uppercase text-emerald-400">${m.company}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400">${m.badge}</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">${m.title}</h4>
+        `;
+        list.appendChild(item);
+      });
+
+      if (missions.length > 0 && !activeMission) selectMission(missions[0]);
+    }
+
+    function selectMission(m) {
+      activeMission = m;
+      document.getElementById('active-title').innerText = m.title;
+      document.getElementById('active-desc').innerText = m.theory_brief;
+      document.getElementById('active-badge').innerText = m.badge;
+      document.getElementById('theory-text').innerText = m.theory_brief;
+      document.getElementById('video-frame').src = m.video_url;
+
+      const sContainer = document.getElementById('shocks-container');
+      sContainer.innerHTML = '';
+      (m.shocks || []).forEach(s => {
+        const btn = document.createElement('button');
+        btn.id = `shock-btn-${s.id}`;
+        btn.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-amber-500/50 text-xs transition';
+        btn.onclick = () => toggleShockAction(s);
+        btn.innerHTML = `<div class="font-bold text-amber-300 text-[11px]">${s.title}</div><div class="text-[10px] text-slate-400 mt-0.5">${s.description}</div>`;
+        sContainer.appendChild(btn);
+      });
+
+      const qContainer = document.getElementById('quiz-container');
+      qContainer.innerHTML = '';
+      m.quiz.forEach((q, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2';
+        qDiv.innerHTML = `<div class="font-bold text-white">${idx + 1}. ${q.question}</div>`;
+        q.options.forEach((opt, oIdx) => {
+          qDiv.innerHTML += `
+            <label class="flex items-center space-x-2 text-slate-300 cursor-pointer">
+              <input type="radio" name="${q.id}" value="${oIdx}" class="accent-indigo-500">
+              <span>${opt}</span>
+            </label>
+          `;
+        });
+        qContainer.appendChild(qDiv);
+      });
+
+      renderClassicControls(m.type);
+      chatHistory = [];
+      labRound = 1;
+      document.getElementById('round-idx-lbl').innerText = "1 / 3";
+      document.getElementById('certificate-card').classList.add('hidden');
+      gotoLabStep(1);
+    }
+
+    function renderClassicControls(type) {
+      const c = document.getElementById('lab-dynamic-controls');
+      c.innerHTML = '';
+      if (type === 'logistics') {
+        c.innerHTML = `
+          <div><div class="flex justify-between font-semibold mb-1"><span>Hublar soni:</span><span id="vc1" class="text-emerald-400 font-bold">2 ta</span></div><input type="range" id="c_hubs" min="1" max="5" value="2" oninput="document.getElementById('vc1').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><label class="block font-semibold mb-1">Kuryerlar modeli:</label><select id="c_courier" onchange="runClassicSim()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white"><option value="ichki_shtat">O'z kuryerlari</option><option value="autsorsing">Tashqi autsorsing</option></select></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Marketing byudjeti:</span><span id="vc2" class="text-emerald-400 font-bold">15,000,000 so'm</span></div><input type="range" id="c_mkt" min="5000000" max="40000000" step="2500000" value="15000000" oninput="document.getElementById('vc2').innerText=parseInt(this.value).toLocaleString()+' so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
+        `;
+      } else if (type === 'retail') {
+        c.innerHTML = `
+          <div><div class="flex justify-between font-semibold mb-1"><span>Chakana narx ustamasi:</span><span id="vc1" class="text-emerald-400 font-bold">22%</span></div><input type="range" id="c_markup" min="10" max="40" value="22" oninput="document.getElementById('vc1').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Chegirma:</span><span id="vc2" class="text-emerald-400 font-bold">5%</span></div><input type="range" id="c_discount" min="0" max="25" value="5" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Do'konlar soni:</span><span id="vc3" class="text-emerald-400 font-bold">25 ta</span></div><input type="range" id="c_stores" min="10" max="60" value="25" oninput="document.getElementById('vc3').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
+        `;
+      } else if (type === 'automotive') {
+        c.innerHTML = `
+          <div><div class="flex justify-between font-semibold mb-1"><span>Oylik ishlab chiqarish:</span><span id="vc1" class="text-emerald-400 font-bold">1,200 dona</span></div><input type="range" id="c_vol" min="400" max="3000" step="100" value="1200" oninput="document.getElementById('vc1').innerText=parseInt(this.value).toLocaleString()+' dona'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Eksport ulushi:</span><span id="vc2" class="text-emerald-400 font-bold">30%</span></div><input type="range" id="c_exp" min="10" max="70" value="30" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Lokalizatsiya:</span><span id="vc3" class="text-emerald-400 font-bold">45%</span></div><input type="range" id="c_loc" min="20" max="75" value="45" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+        `;
+      } else {
+        c.innerHTML = `
+          <div><div class="flex justify-between font-semibold mb-1"><span>Boshlang'ich Capex:</span><span id="vc1" class="text-emerald-400 font-bold">50 mlrd so'm</span></div><input type="range" id="c_capex" min="20" max="100" step="5" value="50" oninput="document.getElementById('vc1').innerText=this.value+' mlrd so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Diskont stavkasi WACC:</span><span id="vc2" class="text-emerald-400 font-bold">16%</span></div><input type="range" id="c_wacc" min="10" max="26" value="16" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Pul oqimi o'sishi:</span><span id="vc3" class="text-emerald-400 font-bold">15%</span></div><input type="range" id="c_growth" min="5" max="30" value="15" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+        `;
+      }
+    }
+
+    function toggleShockAction(shock) {
+      const alertBox = document.getElementById('lab-shock-alert');
+      if (activeShock === shock.id) {
+        activeShock = null;
+        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
+        alertBox.classList.add('hidden');
+      } else {
+        activeShock = shock.id;
+        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
+        document.getElementById(`shock-btn-${shock.id}`).className = 'w-full text-left p-2.5 rounded-xl border border-red-500 bg-red-950/60 text-xs transition shadow-lg';
+        alertBox.classList.remove('hidden');
+        gotoLabStep(3);
+      }
+      runClassicSim();
+    }
+
+    function gotoLabStep(num) {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`lab-step-${i}`).classList.add('hidden');
+        document.getElementById(`lab-step-btn-${i}`).className = 'py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center';
+      }
+      document.getElementById(`lab-step-${num}`).classList.remove('hidden');
+      document.getElementById(`lab-step-btn-${num}`).className = 'py-2.5 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center';
+      if (num === 3) runClassicSim();
+    }
+
+    async function submitQuizAction() {
+      const answers = {};
+      activeMission.quiz.forEach(q => {
+        const chk = document.querySelector(`input[name="${q.id}"]:checked`);
+        if (chk) answers[q.id] = parseInt(chk.value);
+      });
+
+      const res = await fetch('/api/v1/missions/quiz-check', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ mission_id: activeMission.id, answers: answers }) });
+      const data = await res.json();
+      const div = document.getElementById('quiz-result-box');
+      div.classList.remove('hidden');
+      if (data.passed) {
+        div.className = 'p-3 rounded-xl text-xs bg-emerald-950 border border-emerald-500 text-emerald-300';
+        div.innerHTML = `<strong>Natija: ${data.score_percent}%</strong> — ${data.message} <button onclick="gotoLabStep(3)" class="ml-2 font-bold underline">Simulyatorga o'tish →</button>`;
+      } else {
+        div.className = 'p-3 rounded-xl text-xs bg-red-950 border border-red-500 text-red-300';
+        div.innerHTML = `<strong>Natija: ${data.score_percent}%</strong> — ${data.message}`;
+      }
+    }
+
+    async function runClassicSim() {
+      const currentType = (activeMission && activeMission.type) ? activeMission.type : 'logistics';
+      const currentMissionId = (activeMission && activeMission.id) ? activeMission.id : 1;
+      let payload = { mission_id: currentMissionId, active_shock: activeShock };
+
+      if (currentType === 'logistics') {
+        payload.hub_count = parseInt(document.getElementById('c_hubs')?.value || 2);
+        payload.courier_model = document.getElementById('c_courier')?.value || 'ichki_shtat';
+        payload.marketing_budget = parseFloat(document.getElementById('c_mkt')?.value || 15000000);
+      } else if (currentType === 'retail') {
+        payload.retail_markup = parseInt(document.getElementById('c_markup')?.value || 22);
+        payload.retail_discount = parseInt(document.getElementById('c_discount')?.value || 5);
+        payload.store_count = parseInt(document.getElementById('c_stores')?.value || 25);
+      } else if (currentType === 'automotive') {
+        payload.production_volume = parseInt(document.getElementById('c_vol')?.value || 1200);
+        payload.export_share = parseInt(document.getElementById('c_exp')?.value || 30);
+        payload.localization_rate = parseInt(document.getElementById('c_loc')?.value || 45);
+      } else {
+        payload.capex_investment = parseFloat(document.getElementById('c_capex')?.value || 50) * 1000000000;
+        payload.wacc_rate = parseFloat(document.getElementById('c_wacc')?.value || 16);
+        payload.operating_cash_flow_growth = parseInt(document.getElementById('c_growth')?.value || 15);
+      }
+
+      const res = await fetch('/api/v1/missions/simulate-advanced', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+      const d = await res.json();
+      window.lastSimResult = d;
+
+      const kpiBox = document.getElementById('lab-dynamic-kpis');
+      kpiBox.innerHTML = '';
+      (d.kpis || []).forEach(k => {
+        kpiBox.innerHTML += `<div><div class="text-[10px] text-slate-400">${k.label}</div><div class="font-bold text-${k.color}-400 text-xs mt-0.5">${k.val}</div></div>`;
+      });
+
+      const bCtx = document.getElementById('classicBarChart').getContext('2d');
+      if (classicBarInst) classicBarInst.destroy();
+      classicBarInst = new Chart(bCtx, {
+        type: 'bar',
+        data: { labels: d.chart_bar.labels, datasets: [{ data: d.chart_bar.data, backgroundColor: ['#3b82f6', '#ef4444', '#10b981'], borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      const pCtx = document.getElementById('classicPieChart').getContext('2d');
+      if (classicPieInst) classicPieInst.destroy();
+      classicPieInst = new Chart(pCtx, {
+        type: 'doughnut',
+        data: { labels: d.chart_pie.labels, datasets: [{ data: d.chart_pie.data, backgroundColor: ['#10b981', '#334155'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    // SI CHATI
+    async function sendChatMsg() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const currentMissionId = (activeMission && activeMission.id) ? activeMission.id : 1;
+      const currentMissionTitle = (activeMission && activeMission.title) ? activeMission.title : "Uzum Market Logistika";
+
+      const cBox = document.getElementById('chat-box');
+      cBox.innerHTML += `
+        <div class="flex items-start justify-end space-x-2">
+          <div class="bg-emerald-600 p-2.5 rounded-xl text-white max-w-[85%] shadow">${text}</div>
+        </div>
+      `;
+      chatHistory.push({ role: 'user', content: text });
+      input.value = '';
+      cBox.scrollTop = cBox.scrollHeight;
+
+      const btn = document.getElementById('chat-send-btn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/v1/missions/ai-debate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            mission_id: currentMissionId,
+            history: chatHistory,
+            decision_summary: `${currentMissionTitle} (KPIlar: ${window.lastSimResult ? JSON.stringify(window.lastSimResult.kpis) : 'Oddiy rejim'})`,
+            round_index: labRound
+          })
+        });
+
+        const data = await res.json();
+        chatHistory.push({ role: 'assistant', content: data.reply });
+
+        cBox.innerHTML += `
+          <div class="flex items-start space-x-2">
+            <div class="bg-purple-900/60 p-1.5 rounded-lg text-purple-300"><i class="fa-solid fa-user-tie"></i></div>
+            <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-200 max-w-[85%] shadow">
+              <strong>SI Professor:</strong> ${data.reply}
+            </div>
+          </div>
+        `;
+        cBox.scrollTop = cBox.scrollHeight;
+
+        if (data.round_complete && data.next_round) {
+          labRound = data.next_round;
+          document.getElementById('round-idx-lbl').innerText = `${labRound} / 3`;
+        }
+
+        if (data.is_ready_for_certificate && data.certificate_data) {
+          const cert = data.certificate_data;
+          document.getElementById('cert-mission-name').innerText = currentMissionTitle;
+          document.getElementById('cert-score-lbl').innerText = `${cert.score} / 100 (${cert.verdict})`;
+          document.getElementById('cert-date-lbl').innerText = cert.date;
+          document.getElementById('cert-id-lbl').innerText = cert.cert_id;
+          document.getElementById('cert-qr-img').src = cert.qr_url;
+          document.getElementById('certificate-card').classList.remove('hidden');
+          document.getElementById('certificate-card').scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (err) {
+        console.error("Chat xatosi:", err);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // 3. FORENSIC AUDIT
+    async function runForensicAction() {
+      const payload = {
+        cut_admin_expenses_pct: parseInt(document.getElementById('c_fa_admin').value),
+        restructure_debt_months: parseInt(document.getElementById('c_fa_debt').value),
+        layoff_redundant_staff_pct: parseInt(document.getElementById('c_fa_staff').value),
+        discount_slow_inventory_pct: parseInt(document.getElementById('c_fa_inv').value)
+      };
+      const res = await fetch('/api/v1/lab/forensic-audit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+      const d = await res.json();
+      window.lastMetrics.forensic_cash_flow = d.final_cash_flow;
+
+      document.getElementById('fa_saved').innerText = (d.monthly_burn_rate_saved / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('fa_cf').innerText = (d.final_cash_flow / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('fa_cf').className = d.final_cash_flow > 0 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
+      const v = document.getElementById('fa_verdict');
+      v.innerText = d.verdict;
+      v.className = d.is_recovered ? "p-3 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-600 font-bold" : "p-3 rounded-lg bg-red-950 text-red-300 border border-red-600 font-bold";
+    }
+
+    // 4. EOQ
+    async function runEOQAction() {
+      const demand = parseInt(document.getElementById('c_eoq_d').value) || 24000;
+      const orderCost = parseFloat(document.getElementById('c_eoq_s').value) || 250000;
+      const holdCost = parseFloat(document.getElementById('c_eoq_h').value) || 12000;
+      const leadTime = parseInt(document.getElementById('c_eoq_l').value) || 5;
+
+      const payload = {
+        annual_demand: demand,
+        order_cost: orderCost,
+        holding_cost_unit: holdCost,
+        lead_time_days: leadTime,
+        safety_factor_z: 1.65
+      };
+
+      try {
+        const res = await fetch('/api/v1/lab/supply-chain-eoq', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const d = await res.json();
+        window.lastMetrics.eoq_annual_cost = d.total_annual_inventory_cost;
+
+        document.getElementById('eoq_val').innerText = d.eoq_units.toLocaleString() + " dona";
+        document.getElementById('eoq_orders').innerText = d.orders_per_year + " marta";
+        document.getElementById('eoq_safety').innerText = d.safety_stock_units.toLocaleString() + " dona";
+        document.getElementById('eoq_rop').innerText = d.reorder_point_units.toLocaleString() + " dona";
+        document.getElementById('eoq_cost').innerText = (d.total_annual_inventory_cost / 1000000).toFixed(1) + " mln so'm";
+
+        const halfHoldingCost = (d.eoq_units / 2.0) * holdCost;
+        const totalOrderingCost = d.orders_per_year * orderCost;
+        
+        const ctx = document.getElementById('eoqChart').getContext('2d');
+        if (eoqChartInst) eoqChartInst.destroy();
+        eoqChartInst = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Yillik Buyurtma Xarajati', 'Yillik Saqlash Xarajati'],
+            datasets: [{
+              data: [Math.round(totalOrderingCost), Math.round(halfHoldingCost)],
+              backgroundColor: ['#6366f1', '#10b981'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            cutout: '68%'
+          }
+        });
+      } catch (err) {}
+    }
+
+    // 5. PRICING
+    async function runPricingAction() {
+      const payload = {
+        base_price: 50000.0,
+        price_change_pct: parseInt(document.getElementById('c_pr_change').value),
+        elasticity_coefficient: parseFloat(document.getElementById('c_pr_ed').value) || -1.6,
+        unit_cost: 32000.0
+      };
+      const res = await fetch('/api/v1/lab/dynamic-pricing', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+      const d = await res.json();
+      window.lastMetrics.pricing_profit_delta = d.profit_delta;
+
+      document.getElementById('pr_price').innerText = d.new_price.toLocaleString() + " so'm";
+      document.getElementById('pr_vol').innerText = d.new_volume.toLocaleString() + " dona (" + d.volume_change_pct + "%)";
+      document.getElementById('pr_profit').innerText = (d.profit_delta >= 0 ? '+' : '') + (d.profit_delta / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('pr_profit').className = d.profit_delta >= 0 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
+    }
+
+    // 6. SECURITY
+    async function runSecurityAction() {
+      const payload = {
+        fx_devaluation_pct: parseInt(document.getElementById('c_sec_fx').value),
+        customs_tariff_pct: parseInt(document.getElementById('c_sec_tax').value),
+        compliance_reserve_fund: parseFloat(document.getElementById('c_sec_fund').value) || 50000000
+      };
+      const res = await fetch('/api/v1/lab/security-stress-test', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+      const d = await res.json();
+      window.lastMetrics.survival_score = d.survival_score;
+
+      document.getElementById('sec_risk').innerText = (d.total_risk_exposure / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('sec_score').innerText = d.survival_score + " / 100";
+      const s = document.getElementById('sec_status');
+      s.innerText = `Holat: ${d.risk_status} (Qoplash: ${d.coverage_ratio}%)`;
+      s.className = d.survival_score >= 70 ? "p-3 rounded-lg bg-emerald-950 text-emerald-300 font-bold" : (d.survival_score >= 40 ? "p-3 rounded-lg bg-amber-950 text-amber-300 font-bold" : "p-3 rounded-lg bg-red-950 text-red-300 font-bold");
+    }
+
+    // 7. BOSHQARUV KENGASHI EVALUATION
+    async function runBoardEvaluationAction() {
+      const payload = {
+        battle_profit: window.lastMetrics.battle_profit,
+        forensic_cash_flow: window.lastMetrics.forensic_cash_flow,
+        eoq_annual_cost: window.lastMetrics.eoq_annual_cost,
+        pricing_profit_delta: window.lastMetrics.pricing_profit_delta,
+        survival_score: window.lastMetrics.survival_score,
+        student_name: "Mirzarakhim B."
+      };
+
+      const res = await fetch('/api/v1/board/evaluate-pitch', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const d = await res.json();
+
+            // Pipeline ko'rsatkichlarini yangilash
+      document.getElementById('pipe-battle').innerText = (payload.battle_profit >= 0 ? '+' : '') + (payload.battle_profit / 1000000).toFixed(1) + " mln";
+      document.getElementById('pipe-cf').innerText = (payload.forensic_cash_flow >= 0 ? '+' : '') + (payload.forensic_cash_flow / 1000000).toFixed(1) + " mln";
+      document.getElementById('pipe-eoq').innerText = (payload.eoq_annual_cost / 1000000).toFixed(1) + " mln";
+      document.getElementById('pipe-pricing').innerText = (payload.pricing_profit_delta >= 0 ? '+' : '') + (payload.pricing_profit_delta / 1000000).toFixed(1) + " mln";
+      document.getElementById('pipe-sec').innerText = payload.survival_score + " / 100";
+
+      document.getElementById('board-ebitda').innerText = (d.annual_ebitda / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('board-valuation').innerText = (d.company_valuation / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('board-score').innerText = d.board_score + " / 100";
+      document.getElementById('board-verdict').innerText = d.board_decision;
+
+      document.getElementById('print-ebitda').innerText = (d.annual_ebitda / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('print-valuation').innerText = (d.company_valuation / 1000000).toFixed(1) + " mln so'm";
+      document.getElementById('print-score').innerText = d.board_score + " / 100 (" + d.board_decision + ")";
+
+      const c = document.getElementById('board-reviews-container');
+      const pC = document.getElementById('print-reviews-box');
+      c.innerHTML = '';
+      pC.innerHTML = '';
+
+      d.reviews.forEach(r => {
+        c.innerHTML += `
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 text-xs">
+            <div class="flex justify-between items-center">
+              <div><strong class="text-white">${r.role}</strong> <span class="text-slate-500">(${r.name})</span></div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-${r.color}-950 text-${r.color}-400 border border-${r.color}-800">${r.status}</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${r.comment}</p>
+          </div>
+        `;
+        pC.innerHTML += `<div><strong>${r.role}:</strong> ${r.status} — ${r.comment}</div>`;
+      });
+
+      const ctx = document.getElementById('boardValuationChart').getContext('2d');
+      if (boardChartInst) boardChartInst.destroy();
+      boardChartInst = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['1-Yil', '2-Yil (Prognoz)', '3-Yil (Prognoz)'],
+          datasets: [{
+            label: 'Korxona Qiymati (so\'m)',
+            data: d.valuation_forecast,
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointBackgroundColor: '#f59e0b',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    window.onload = () => {
+      updateDuelCharts({ market_share: 50, net_profit: 25000000 }, { market_share: 50, net_profit: 25000000 });
+    };
+  </script>
+</body>
+</html>
