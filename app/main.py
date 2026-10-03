@@ -1,16 +1,11 @@
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 import os
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.endpoints import router as api_router
 
-app = FastAPI(
-    title="BIZLAB TSUE PRO",
-    description="TDIU Virtual Biznes Simulyatori & Ko'p Modulli Tadqiqot Laboratoriyasi",
-    version="3.0.0"
-)
+app = FastAPI(title="BIZLAB TSUE PRO", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,14 +17,18 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api/v1")
 
-@app.get("/", tags=["Dashboard"])
-def serve_dashboard():
-    return FileResponse("static/index.html", headers={"Cache-Control": "no-cache, no-store, must-revalidate"})
+# Static fayllar
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-@app.get("/scoreboard", tags=["Scoreboard"])
-def serve_scoreboard():
-    return FileResponse("static/scoreboard.html", headers={"Cache-Control": "no-cache, no-store, must-revalidate"})
+@app.api_route("/", methods=["GET", "HEAD"])
+async def root():
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {"message": "BIZLAB TSUE PRO Backend Active"}
 
-@app.get("/health", tags=["Status"])
-def health_check():
-    return {"status": "faol", "app": "BIZLAB TSUE PRO", "modules": 6}
+@app.api_route("/health", methods=["GET", "HEAD"])
+async def health():
+    return {"status": "healthy"}
