@@ -693,6 +693,25 @@
       pricing_profit_delta: 8000000.0,
       survival_score: 78
     };
+    // YOUTUBE HAVOLASINI TO'G'RI EMBED FORMATIGA O'TKAZISH FUNKSIYASI
+    function formatYouTubeEmbedUrl(url) {
+      if (!url) return '';
+      // Agar allaqachon embed formatda bo'lsa
+      if (url.includes('youtube.com/embed/')) {
+        return url;
+      }
+      // youtu.be/ID formatidan ID ni olish
+      if (url.includes('youtu.be/')) {
+        const id = url.split('youtu.be/')[1]?.split('?')[0];
+        return `https://www.youtube.com/embed/${id}`;
+      }
+      // youtube.com/watch?v=ID formatidan ID ni olish
+      if (url.includes('watch?v='')) {
+        const id = url.split('watch?v=')[1]?.split('&')[0];
+        return `https://www.youtube.com/embed/${id}`;
+      }
+      return url;
+    }
 
     const i18n = {
       uz: {
