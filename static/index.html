@@ -3,132 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BIZLAB TSUE PRO</title>
+  <title>BIZLAB TSUE PRO — Strategik Biznes Laboratoriyasi</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .mono { font-family: 'JetBrains Mono', monospace; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
 
   <!-- Header -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
-      <div class="flex items-center justify-between w-full sm:w-auto">
-        <div class="flex items-center space-x-3">
-          <div class="bg-gradient-to-r from-emerald-500 to-indigo-600 text-white font-black px-3.5 py-1.5 rounded-xl text-lg tracking-wider">
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 py-3.5 flex flex-col md:flex-row justify-between items-center gap-3.5">
+      <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center space-x-3.5">
+          <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-black px-4 py-2 rounded-2xl text-xl tracking-wider shadow-lg">
             BIZLAB
           </div>
           <div>
-            <h1 class="text-base font-extrabold text-white">BIZLAB TSUE PRO</h1>
-            <p class="text-xs text-slate-400" id="t-hdr-sub">TDIU 8 Kompetensiyali Virtual Laboratoriya</p>
+            <h1 class="text-base lg:text-lg font-black tracking-wide text-white" data-i18n="hdr_title">BIZLAB TSUE PRO</h1>
+            <p class="text-xs lg:text-sm text-slate-400 font-medium" data-i18n="hdr_sub">Toshkent Davlat Iqtisodiyot Universiteti — 8 Kompetensiyali Virtual Laboratoriya</p>
           </div>
         </div>
-        <!-- Til tugmasi (mobil uchun) -->
-        <button onclick="toggleLang()" class="sm:hidden px-3 py-1.5 rounded-xl border border-amber-500/50 bg-slate-950 text-amber-400 font-bold text-xs flex items-center gap-1.5">
+        <button onclick="toggleLang()" class="md:hidden px-3 py-1.5 rounded-xl border border-amber-500/50 bg-slate-950 text-amber-400 font-black text-xs flex items-center gap-1.5 shadow">
           <i class="fa-solid fa-globe"></i>
-          <span class="lang-lbl">UZ</span>
+          <span class="lang-indicator font-mono">UZ</span>
         </button>
       </div>
 
-      <!-- Navigatsiya va Til tugmasi (Desktop uchun) -->
-      <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
-        <div class="flex items-center space-x-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs sm:text-sm font-semibold overflow-x-auto no-scrollbar">
-          <button onclick="switchTab('cases')" id="btn-tab-cases" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold whitespace-nowrap shadow">
-            <i class="fa-solid fa-briefcase mr-1"></i> <span id="t-tab-cases">1-Qism: 8 Kompetensiya</span>
+      <!-- Desktop Navigatsiya va Til -->
+      <div class="flex items-center space-x-2.5 w-full md:w-auto justify-between md:justify-end">
+        <div class="flex items-center space-x-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-sm font-bold overflow-x-auto no-scrollbar">
+          <button onclick="switchTab('cases')" id="tab-cases" class="px-4 py-2.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 whitespace-nowrap shadow-md">
+            <i class="fa-solid fa-briefcase mr-1.5"></i> <span data-i18n="tab_cases">1-Qism: 8 Kompetensiya</span>
           </button>
-          <button onclick="switchTab('duel')" id="btn-tab-duel" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white whitespace-nowrap transition" id="t-tab-duel">
-            <span id="t-tab-duel-txt">2-Qism: Bozor Jangi</span>
+          <button onclick="switchTab('battle')" id="tab-battle" class="px-4 py-2.5 rounded-xl text-slate-300 hover:text-white whitespace-nowrap transition" data-i18n="tab_battle">
+            2-Qism: Bozor Jangi
           </button>
-          <button onclick="switchTab('board')" id="btn-tab-board" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white whitespace-nowrap transition">
-            <span id="t-tab-board-txt">3-Qism: Boshqaruv Kengashi</span>
+          <button onclick="switchTab('board')" id="tab-board" class="px-4 py-2.5 rounded-xl text-slate-300 hover:text-white whitespace-nowrap transition" data-i18n="tab_board">
+            3-Qism: Boshqaruv Kengashi
           </button>
         </div>
 
-        <button onclick="toggleLang()" class="hidden sm:flex px-3.5 py-2 rounded-xl border border-amber-500/50 bg-slate-900 text-amber-400 hover:bg-slate-800 text-xs font-bold items-center gap-1.5 transition">
+        <button onclick="toggleLang()" class="hidden md:flex px-4 py-2.5 rounded-2xl border border-amber-500/50 bg-slate-900 text-amber-400 hover:bg-slate-800 text-sm font-black transition items-center gap-2 shadow">
           <i class="fa-solid fa-globe"></i>
-          <span class="lang-lbl">UZ</span>
+          <span class="lang-indicator font-mono">UZ</span>
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+  <main class="max-w-7xl mx-auto px-4 lg:px-6 py-6 flex-1 w-full space-y-6">
 
     <!-- 1-QISM: 8 KOMPETENSIYA KEYSLARI -->
-    <section id="view-cases" class="space-y-6">
-      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/30 p-5 sm:p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+    <section id="view-cases" class="space-y-6 block">
+      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/40 p-6 lg:p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-2xl">
         <div>
-          <span class="text-xs font-black uppercase px-2.5 py-1 rounded bg-amber-500 text-slate-950 font-mono" id="t-c-badge">RASMIY STANDART</span>
-          <h2 class="text-xl sm:text-2xl font-black text-white mt-2" id="t-c-title">8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari</h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1" id="t-c-desc">Bakalavriat va Magistratura: Bozor tahlili, iqtisodiy formulalar va amaliy hisob-kitoblar.</p>
+          <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-md bg-amber-500 text-slate-950 font-mono" data-i18n="c_badge">RASMIY MATRITSA STANDARTI</span>
+          <h2 class="text-2xl lg:text-3xl font-black text-white mt-2" data-i18n="c_title">8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari</h2>
+          <p class="text-sm lg:text-base text-slate-300 mt-1.5 leading-relaxed" data-i18n="c_desc">Bakalavriat va Magistratura bosqichlari uchun: Amaliy situatsion tahlil, bozor muammolari va aniq hisob-kitoblar.</p>
         </div>
-        <span class="text-xs sm:text-sm font-bold font-mono px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400" id="t-c-count">
-          Jami: 8 ta Akademik Keys
-        </span>
+        <div class="w-full md:w-auto text-left md:text-right">
+          <span class="inline-block text-sm font-black font-mono px-4 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400" data-i18n="c_count">
+            Jami: 8 ta To'liq Akademik Keys
+          </span>
+        </div>
       </div>
 
-      <!-- Keyslar to'ri -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5" id="cases-grid"></div>
+      <!-- 8 ta Keys kartochkalari -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6" id="cases-grid"></div>
     </section>
 
-    <!-- 2-QISM: BOZOR JANGI (DUEL) -->
-    <section id="view-duel" class="space-y-6 hidden">
-      <div class="bg-slate-900 border-2 border-rose-500/30 p-5 sm:p-6 rounded-2xl space-y-4 shadow-xl">
-        <h2 class="text-xl sm:text-2xl font-black text-white" id="t-m1-title">Uzum Express VS Yandex/Express24: Bozor Jangi</h2>
-        <p class="text-xs sm:text-sm text-slate-300" id="t-m1-desc">Narx va marketing byudjeti bo'yicha deterministik raqobat simulyatori.</p>
+    <!-- 2-QISM: BOZOR JANGI (ARENA) -->
+    <section id="view-battle" class="space-y-6 hidden">
+      <div class="bg-slate-900 border-2 border-rose-500/40 p-6 lg:p-8 rounded-3xl space-y-5 shadow-2xl">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-md bg-rose-600 text-white font-mono" data-i18n="m1_badge">RAQOBAT ARENASI</span>
+          <h2 class="text-2xl lg:text-3xl font-black text-white mt-2" data-i18n="m1_title">Uzum Express VS Yandex/Express24: Narx va Bozor Ulushi Jangi</h2>
+          <p class="text-sm lg:text-base text-slate-300 mt-1" data-i18n="m1_desc">Kurno va Bertran oligopoliya modellari asosidagi deterministik narx va marketing raqobati simulyatori.</p>
+        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-slate-950 p-4 rounded-xl border border-emerald-500/30 space-y-3">
-            <h3 class="font-bold text-emerald-400 text-sm">1-Jamoa: Uzum Express</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-950 p-6 rounded-2xl border-2 border-emerald-500/40 space-y-4 shadow-lg">
+            <h3 class="text-base font-extrabold text-emerald-400 uppercase tracking-wide" data-i18n="m1_team1">1-Jamoa: Uzum Express</h3>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span id="t-m1-p1">Yetkazish narxi:</span> <span id="v_a_p" class="font-bold text-emerald-400 font-mono">14,000 so'm</span></div>
-              <input type="range" id="c_a_p" min="8000" max="22000" step="1000" value="14000" oninput="document.getElementById('v_a_p').innerText=parseInt(this.value).toLocaleString()+' '+(currentLang==='uz'?'so\'m':'UZS')" class="w-full accent-emerald-500">
+              <div class="flex justify-between text-sm mb-1.5 font-bold">
+                <span data-i18n="m1_price_lbl">Yetkazib berish tarif narxi:</span> 
+                <span id="v_a_p" class="text-emerald-400 font-mono text-base">14,000 so'm</span>
+              </div>
+              <input type="range" id="c_a_p" min="8000" max="22000" step="1000" value="14000" oninput="updateDuelUI()" class="w-full accent-emerald-500 cursor-pointer">
             </div>
           </div>
-          <div class="bg-slate-950 p-4 rounded-xl border border-rose-500/30 space-y-3">
-            <h3 class="font-bold text-rose-400 text-sm">2-Jamoa: Yandex / Express24</h3>
+
+          <div class="bg-slate-950 p-6 rounded-2xl border-2 border-rose-500/40 space-y-4 shadow-lg">
+            <h3 class="text-base font-extrabold text-rose-400 uppercase tracking-wide" data-i18n="m1_team2">2-Jamoa: Yandex / Express24</h3>
             <div>
-              <div class="flex justify-between text-xs mb-1"><span id="t-m1-p2">Yetkazish narxi:</span> <span id="v_b_p" class="font-bold text-rose-400 font-mono">15,000 so'm</span></div>
-              <input type="range" id="c_b_p" min="8000" max="22000" step="1000" value="15000" oninput="document.getElementById('v_b_p').innerText=parseInt(this.value).toLocaleString()+' '+(currentLang==='uz'?'so\'m':'UZS')" class="w-full accent-rose-500">
+              <div class="flex justify-between text-sm mb-1.5 font-bold">
+                <span data-i18n="m1_price_lbl">Yetkazib berish tarif narxi:</span> 
+                <span id="v_b_p" class="text-rose-400 font-mono text-base">15,000 so'm</span>
+              </div>
+              <input type="range" id="c_b_p" min="8000" max="22000" step="1000" value="15000" oninput="updateDuelUI()" class="w-full accent-rose-500 cursor-pointer">
             </div>
           </div>
         </div>
 
-        <button onclick="runSimpleDuel()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-600 text-white font-bold rounded-xl text-sm transition">
-          <i class="fa-solid fa-bolt mr-1.5"></i> <span id="t-m1-btn">Raundni Hisoblash</span>
+        <button onclick="runDuelAction()" class="w-full py-4 bg-gradient-to-r from-amber-500 via-rose-600 to-indigo-600 hover:opacity-95 text-white font-black rounded-2xl text-base shadow-xl transition transform hover:scale-[1.01]">
+          <i class="fa-solid fa-bolt-lightning mr-2"></i> <span data-i18n="m1_btn">Raund Natijasini Hisoblash (Jang!)</span>
         </button>
 
-        <div id="duel-res-box" class="p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs sm:text-sm text-slate-300">
-          Ikkala tomon narxini tanlab, tugmani bosing.
+        <div id="duel-res-box" class="p-5 bg-slate-950 rounded-2xl border border-slate-800 text-sm lg:text-base text-slate-300">
+          <span data-i18n="m1_placeholder">Ikkala tomon narx va marketing parametrlarini belgilab, hisoblash tugmasini bosing.</span>
         </div>
       </div>
     </section>
 
     <!-- 3-QISM: BOSHQARUV KENGASHI -->
     <section id="view-board" class="space-y-6 hidden">
-      <div class="bg-slate-900 border-2 border-amber-500/40 p-5 sm:p-6 rounded-2xl space-y-4 shadow-xl">
-        <h2 class="text-xl sm:text-2xl font-black text-white" id="t-m7-title">Aksiyadorlar va Boshqaruv Kengashi Xulosasi</h2>
-        <p class="text-xs sm:text-sm text-slate-300" id="t-m7-desc">Loyiha umumiy moliyaviy barqarorligi va baholash ko'rsatkichlari.</p>
+      <div class="bg-slate-900 border-2 border-amber-500/40 p-6 lg:p-8 rounded-3xl space-y-6 shadow-2xl">
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-md bg-amber-500 text-slate-950 font-mono" data-i18n="m7_badge">DIREKTORLAR KENGASHI</span>
+          <h2 class="text-2xl lg:text-3xl font-black text-white mt-2" data-i18n="m7_title">Aksiyadorlar va Boshqaruv Kengashiga Strategik Taqdimot</h2>
+          <p class="text-sm lg:text-base text-slate-300 mt-1" data-i18n="m7_desc">Korxonaning yillik operatsion ko'rsatkichlari, bozor kapitallashuvi va mustaqil direktorlar bahosi.</p>
+        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs sm:text-sm">
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-400" id="t-b-ebitda">Yillik EBITDA:</span>
-            <div class="text-xl font-black text-emerald-400 font-mono mt-1">120.5 mln</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 text-sm">
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-1">
+            <span class="text-slate-400 font-bold" data-i18n="b_ebitda">Yillik Operatsion Foyda (EBITDA):</span>
+            <div class="text-2xl font-black text-emerald-400 font-mono mt-1">120.5 mln</div>
           </div>
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-400" id="t-b-val">Bozor Kapitallashuvi:</span>
-            <div class="text-xl font-black text-white font-mono mt-1">698.9 mln</div>
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-1">
+            <span class="text-slate-400 font-bold" data-i18n="b_val">Korxona Bozor Kapitallashuvi:</span>
+            <div class="text-2xl font-black text-white font-mono mt-1">698.9 mln</div>
           </div>
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-400" id="t-b-score">Kengash Bahosi:</span>
-            <div class="text-xl font-black text-amber-400 font-mono mt-1">88 / 100</div>
+          <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-1">
+            <span class="text-slate-400 font-bold" data-i18n="b_score">Kengashning Boshqaruv Bahosi:</span>
+            <div class="text-2xl font-black text-amber-400 font-mono mt-1">94 / 100</div>
           </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <h4 class="font-bold text-white uppercase text-sm tracking-wide" data-i18n="b_verdict">Yakuniy Kengash Qarori:</h4>
+          <div class="text-emerald-400 font-black text-lg" data-i18n="b_verdict_val">TASDIQLANDI VA MOLIYALASHTIRILADI</div>
         </div>
       </div>
     </section>
@@ -136,410 +155,53 @@
   </main>
 
   <!-- MODAL: KEYSNI YECHISH -->
-  <div id="case-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-start border-b border-slate-800 pb-3">
+  <div id="case-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-900 border-2 border-slate-700 rounded-3xl max-w-xl w-full p-6 lg:p-7 space-y-5 shadow-2xl max-h-[92vh] overflow-y-auto">
+      <div class="flex justify-between items-start border-b border-slate-800 pb-3.5">
         <div>
-          <span id="cm-badge" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">№ 1</span>
-          <h3 id="cm-title" class="text-base font-bold text-white mt-1">Keys Nomi</h3>
+          <span id="cm-badge" class="text-xs font-mono px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">№ 1</span>
+          <h3 id="cm-title" class="text-lg lg:text-xl font-black text-white mt-2">Keys Nomi</h3>
         </div>
-        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+        <button onclick="closeCaseModal()" class="w-9 h-9 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-lg transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="space-y-3.5 text-xs sm:text-sm">
-        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800">
-          <strong class="text-amber-400 block mb-1 text-xs uppercase tracking-wide font-mono" id="t-cm-sit-h">Bozor Vaziyati:</strong>
+      <div class="space-y-4 text-sm lg:text-base">
+        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+          <strong class="text-amber-400 block mb-1.5 text-xs font-mono uppercase tracking-wider" data-i18n="cm_sit_h">Bozor Vaziyati (Situation):</strong>
           <p id="cm-sit" class="text-slate-300 leading-relaxed"></p>
         </div>
 
-        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-2.5">
-          <strong class="text-emerald-400 block text-xs uppercase tracking-wide font-mono" id="t-cm-task-h">Iqtisodiy Topshiriq & Hisob:</strong>
+        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
+          <strong class="text-emerald-400 block text-xs font-mono uppercase tracking-wider" data-i18n="cm_task_h">Iqtisodiy Masala & Formulali Hisob-kitob:</strong>
           <p id="cm-prompt" class="text-slate-300 leading-relaxed"></p>
           <div id="cm-inputs" class="space-y-2"></div>
-          <button onclick="checkCaseAnswer()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg" id="t-cm-btn-verify">
+          <button onclick="checkCaseAnswer()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm lg:text-base transition shadow-lg" data-i18n="cm_btn_verify">
             Tekshirish va Baholash
           </button>
         </div>
 
-        <div id="cm-res" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hidden space-y-1">
-          <div class="flex justify-between font-bold">
-            <span class="text-slate-400" id="t-cm-verdict">Natija:</span>
-            <span id="cm-score" class="font-mono text-sm"></span>
+        <div id="cm-res" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 hidden space-y-2">
+          <div class="flex justify-between font-bold text-sm lg:text-base">
+            <span class="text-slate-400" data-i18n="cm_verdict">Natija:</span>
+            <span id="cm-score" class="font-mono text-base font-black"></span>
           </div>
-          <p id="cm-feedback" class="text-slate-300 text-xs sm:text-sm leading-relaxed"></p>
+          <p id="cm-feedback" class="text-slate-300 text-sm lg:text-base leading-relaxed"></p>
         </div>
       </div>
 
-      <div class="flex justify-end pt-2 border-t border-slate-800">
-        <button onclick="closeModal()" class="px-5 py-2 rounded-xl bg-slate-800 text-white text-xs sm:text-sm font-bold hover:bg-slate-700" id="t-cm-btn-close">
+      <div class="flex justify-end pt-3 border-t border-slate-800">
+        <button onclick="closeCaseModal()" class="px-6 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-bold hover:bg-slate-700 transition" data-i18n="cm_btn_close">
           Yopish
         </button>
       </div>
     </div>
   </div>
 
-  <script>
-    let currentLang = 'uz';
-
-    // BARCHA MATNLARNING TO'LIQ I18N BAZASI
-    const translations = {
-      uz: {
-        hdr_sub: "TDIU 8 Kompetensiyali Virtual Laboratoriya",
-        tab_cases: "1-Qism: 8 Kompetensiya",
-        tab_duel: "2-Qism: Bozor Jangi",
-        tab_board: "3-Qism: Boshqaruv Kengashi",
-        c_badge: "RASMIY STANDART",
-        c_title: "8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari",
-        c_desc: "Bakalavriat va Magistratura: Bozor tahlili, iqtisodiy formulalar va amaliy hisob-kitoblar.",
-        c_count: "Jami: 8 ta Akademik Keys",
-        btn_solve: "Keysni Yechish",
-        m1_title: "Uzum Express VS Yandex/Express24: Bozor Jangi",
-        m1_desc: "Narx va marketing byudjeti bo'yicha deterministik raqobat simulyatori.",
-        m1_p1: "Yetkazish narxi:",
-        m1_p2: "Yetkazish narxi:",
-        m1_btn: "Raundni Hisoblash",
-        m7_title: "Aksiyadorlar va Boshqaruv Kengashi Xulosasi",
-        m7_desc: "Loyiha umumiy moliyaviy barqarorligi va baholash ko'rsatkichlari.",
-        b_ebitda: "Yillik EBITDA:",
-        b_val: "Bozor Kapitallashuvi:",
-        b_score: "Kengash Bahosi:",
-        cm_sit_h: "Bozor Vaziyati:",
-        cm_task_h: "Iqtisodiy Topshiriq & Hisob:",
-        cm_btn_verify: "Tekshirish va Baholash",
-        cm_btn_close: "Yopish",
-        cm_verdict: "Natija:"
-      },
-      en: {
-        hdr_sub: "TSUE 8 Competency Virtual Laboratory",
-        tab_cases: "Part 1: 8 Competencies",
-        tab_duel: "Part 2: Market Battle",
-        tab_board: "Part 3: Board of Directors",
-        c_badge: "OFFICIAL STANDARD",
-        c_title: "8 Core Entrepreneurship Competency Cases",
-        c_desc: "Undergraduate & Graduate: Market analysis, quantitative metrics and problem solving.",
-        c_count: "Total: 8 Academic Cases",
-        btn_solve: "Solve Case",
-        m1_title: "Uzum Express VS Yandex/Express24: Market Clash",
-        m1_desc: "Deterministic competition simulator modeling price and market elasticity.",
-        m1_p1: "Delivery Tariff:",
-        m1_p2: "Delivery Tariff:",
-        m1_btn: "Compute Clash",
-        m7_title: "Shareholder & Board of Directors Verdict",
-        m7_desc: "Holistic enterprise liquidity and business valuation outputs.",
-        b_ebitda: "Audited EBITDA:",
-        b_val: "Enterprise Valuation:",
-        b_score: "Board Score:",
-        cm_sit_h: "Market Dislocation Brief:",
-        cm_task_h: "Quantitative Assignment & Solving:",
-        cm_btn_verify: "Validate Solution",
-        cm_btn_close: "Close",
-        cm_verdict: "Verdict:"
-      }
-    };
-
-    // 8 TA KOMPETENSIYA KEYSLARI
-    const caseBank = [
-      {
-        id: 1,
-        num: "№ 1",
-        name: { uz: "Imkoniyatni aniqlash", en: "Opportunity Recognition" },
-        focus: { uz: "Bozordagi muammo va ehtiyojni topish", en: "Uncovering market dislocations & unmet needs" },
-        exercise: "Opportunity Recognition Challenge",
-        sit: {
-          uz: "AgroTech logistikasi: O'zbekistonda yetishtirilgan 300,000 tonna sarxil meva-sabzavotning 28%i sovutkichli transport yo'qligi sabab nobud bo'lmoqda. Dehqonlar hosilini arzon sotishga yoki tashlab yuborishga majbur.",
-          en: "Cold-chain Logistics: 28% of 300,000 tons of harvested produce spoils due to lack of refrigerated fleets, forcing farmers into distressed fire sales."
-        },
-        prompt: {
-          uz: "Umumiy bozor hajmi (TAM): 1 tonna mahsulotning o'rtacha narxi 6,000,000 so'm bo'lsa, logistika yetishmasligi sababli yo'qotilayotgan yillik umumiy bozor hajmi necha milliard so'mni tashkil etadi?",
-          en: "Total Addressable Market (TAM): If wholesale price is 6,000,000 UZS/ton, calculate total annual spoiled market value in billions of UZS:"
-        },
-        inputLabel: { uz: "Yo'qotilgan bozor qiymati (mlrd so'mda):", en: "Lost Market Value (in bln UZS):" },
-        val: 504,
-        hint: "300,000 * 0.28 * 6,000,000 / 1,000,000,000",
-        success: { uz: "To'g'ri! Yillik yo'qotish 504 milliard so'm. Bu yangi startap uchun ulkan bozor imkoniyatidir.", en: "Correct! The annual market gap stands at 504 bln UZS." },
-        fail: { uz: "Xato hisoblandi: 300,000 * 28% * 6,000,000 = 504 mlrd so'm.", en: "Incorrect: 300,000 * 28% * 6,000,000 = 504 bln UZS." }
-      },
-      {
-        id: 2,
-        num: "№ 2",
-        name: { uz: "Innovatsion fikrlash", en: "Innovative Thinking" },
-        focus: { uz: "Yangi yechim ishlab chiqish", en: "Synthesizing novel value solutions" },
-        exercise: "Design Thinking Sprint",
-        sit: {
-          uz: "FinTech skoring: An'anaviy banklar kichik tadbirkorlardan mikrokredit uchun 14 kun hujjat talab qiladi. Bitta arizani ko'rib chiqish operatsion xarajati 450,000 so'm.",
-          en: "FinTech Scoring: Traditional banks require 14 days of documentation. Reviewing one applicant costs 450,000 UZS in operational overhead."
-        },
-        prompt: {
-          uz: "Tejamkorlik: AI-skoring joriy etilib, 3 daqiqada tekshirish xarajati 90,000 so'mga tushirildi. Bank oyiga 2,000 ta arizani ko'rib chiqsa, innovatsiya hisobiga bir oyda qancha million so'm tejaladi?",
-          en: "Cost Reduction: Automated scoring cuts review costs to 90,000 UZS. For 2,000 monthly applications, compute total monthly savings in million UZS:"
-        },
-        inputLabel: { uz: "Oylik tejamkorlik (mln so'mda):", en: "Monthly Cost Savings (mln UZS):" },
-        val: 720,
-        hint: "(450,000 - 90,000) * 2,000 / 1,000,000",
-        success: { uz: "Mukammal! Oyiga 720 mln so'm operatsion xarajat tejaladi.", en: "Superb! Saves 720m UZS monthly." },
-        fail: { uz: "Xato: (450,000 - 90,000) * 2,000 = 720 mln so'm.", en: "Incorrect: (450,000 - 90,000) * 2,000 = 720m UZS." }
-      },
-      {
-        id: 3,
-        num: "№ 3",
-        name: { uz: "Biznes-model tuzish", en: "Business Model Canvas" },
-        focus: { uz: "Qiymat taklifi va daromad modeli", en: "Value propositions & recurring models" },
-        exercise: "Business Model Canvas",
-        sit: {
-          uz: "Quyosh energetikasi (BaaS obunasi): Korxonalar $20,000 lik panellarni sotib ololmayapti. Kompaniya bepul o'rnatib berib, har bir korxonadan oyiga $350 obuna to'lovi olishga o'tdi.",
-          en: "Solar Energy (BaaS): Enterprises cannot pay $20,000 upfront. The startup installs arrays free and bills $350 monthly per subscriber."
-        },
-        prompt: {
-          uz: "Yillik tushum (ARR): Dastlabki bosqichda 120 ta korxona obunaga ulandi. Yillik doimiy takrorlanuvchi tushum (ARR) necha ming dollarni tashkil etadi?",
-          en: "Annual Recurring Revenue (ARR): 120 workshops enroll. Calculate total annual recurring revenue (ARR) in thousands of USD ($k):"
-        },
-        inputLabel: { uz: "Yillik ARR ($ mingda):", en: "Annual ARR (in $k):" },
-        val: 504,
-        hint: "120 * 350 * 12 / 1000",
-        success: { uz: "To'g'ri! Yillik barqaror kassa oqimi $504,000 ni tashkil etadi.", en: "Correct! ARR yields $504,000." },
-        fail: { uz: "Xato: 120 korxona * $350 * 12 oy = $504,000.", en: "Incorrect: 120 * $350 * 12 = $504k." }
-      },
-      {
-        id: 4,
-        num: "№ 4",
-        name: { uz: "Moliyaviy kompetensiya", en: "Financial Competency" },
-        focus: { uz: "Xarajat, cash-flow va zararsizlik (BEP)", en: "Cost structures & break-even analytics" },
-        exercise: "Startup Finance Case",
-        sit: {
-          uz: "Zararsizlik nuqtasi (BEP): Ishlab chiqarish sexining oylik doimiy xarajatlari 36,000,000 so'm. 1 dona mahsulot sotuv narxi 80,000 so'm, o'zgaruvchan tannarxi 50,000 so'm.",
-          en: "Break-Even Point (BEP): Monthly fixed overheads are 36,000,000 UZS. Retail price is 80,000 UZS against 50,000 UZS variable unit cost."
-        },
-        prompt: {
-          uz: "BEP hajmi: Korxona oylik xarajatlarini to'liq qoplashi uchun bir oyda kamida necha dona mahsulot sotishi zarur?",
-          en: "Compute BEP Volume: Calculate the minimum monthly units required to reach break-even threshold:"
-        },
-        inputLabel: { uz: "Zararsizlik hajmi (dona):", en: "Break-Even Volume (units):" },
-        val: 1200,
-        hint: "36,000,000 / (80,000 - 50,000)",
-        success: { uz: "A'lo! 1,200 dona sotilganda korxona zararsizlikka erishadi.", en: "Excellent! 1,200 units achieves break-even." },
-        fail: { uz: "Xato: 36,000,000 / (80,000 - 50,000) = 1,200 dona.", en: "Incorrect: 36,000,000 / 30,000 = 1,200 units." }
-      },
-      {
-        id: 5,
-        num: "№ 5",
-        name: { uz: "Riskni boshqarish", en: "Risk Management" },
-        focus: { uz: "Xatarlarni xedjirlash", en: "Risk hedging & mitigation" },
-        exercise: "Business Simulation",
-        sit: {
-          uz: "Valyuta devalvatsiyasi: Korxona chetdan $200,000 lik xomashyo import qiladi (to'lov 90 kundan keyin). Kurs 12,800 dan 13,500 gacha ko'tarilishi kutilmoqda. Korxona bank bilan 13,000 so'mdan forvard bitimi tuzdi.",
-          en: "FX Hedging: An enterprise imports $200,000 payable in 90 days. Spot is 12,800, expected spike is 13,500. The CFO executes a forward contract at 13,000."
-        },
-        prompt: {
-          uz: "Xatardan himoyalanish: Forvard bitimi orqali korxona valyuta kursining oshishidan qancha million so'm potensial zarardan saqlab qolindi?",
-          en: "Capital Shielded: How much foreign exchange loss was neutralized via forward execution (in million UZS)?"
-        },
-        inputLabel: { uz: "Tejalgan mablag' (mln so'mda):", en: "Capital Shielded (mln UZS):" },
-        val: 100,
-        hint: "(13,500 - 13,000) * 200,000 / 1,000,000",
-        success: { uz: "To'g'ri! 100 million so'm potensial valyuta zarari bartaraf etildi.", en: "Correct! 100m UZS in FX volatility was eliminated." },
-        fail: { uz: "Xato: (13,500 - 13,000) * $200,000 = 100 mln so'm.", en: "Incorrect: (13,500 - 13,000) * 200k = 100m UZS." }
-      },
-      {
-        id: 6,
-        num: "№ 6",
-        name: { uz: "Marketing va sotuv", en: "Marketing & Sales" },
-        focus: { uz: "Unit-iqtisodiyot va CAC/LTV", en: "Unit economics & LTV to CAC" },
-        exercise: "Go-to-Market Challenge",
-        sit: {
-          uz: "Mijoz tannarxi (CAC): Korxona bitta yangi mijozni jalb qilish uchun $180 sarflaydi. Mijoz 24 oy xizmatdan foydalanib, har oy $30 sof foyda keltiradi (LTV).",
-          en: "Unit Economics: B2B acquisition costs $180 CAC. Customer lifetime spans 24 months generating $30 monthly net profit (LTV)."
-        },
-        prompt: {
-          uz: "LTV/CAC nisbati: Mijozning umumiy qiymati jalb qilish tannarxidan necha barobar yuqori (karra ko'rsatkichi)?",
-          en: "LTV/CAC Multiplier: Determine the efficiency multiplier comparing LTV to CAC (X):"
-        },
-        inputLabel: { uz: "LTV/CAC nisbati (karra):", en: "LTV/CAC Multiplier (X):" },
-        val: 4,
-        hint: "(24 * 30) / 180 = 720 / 180",
-        success: { uz: "A'lo! LTV = $720, nisbat esa 4.0 karra.", en: "Superb! LTV is $720, giving an optimal 4.0x ratio." },
-        fail: { uz: "Xato: (24 * $30) / $180 = 4.0 karra.", en: "Incorrect: 720 / 180 = 4.0x." }
-      },
-      {
-        id: 7,
-        num: "№ 7",
-        name: { uz: "Liderlik va muzokara", en: "Leadership & Negotiation" },
-        focus: { uz: "Ulushlar taqsimoti va muzokara", en: "Cap-table & equity negotiations" },
-        exercise: "Negotiation Role Play",
-        sit: {
-          uz: "Venchur sarmoyasi: Ta'sischilar korxonani $1,500,000 deb baholadi (Pre-Money). Investor loyihaga $500,000 naqd investitsiya kiritdi.",
-          en: "Venture Financing: Founders valuate startup at $1,500,000 pre-money. An investor commits $500,000 in growth capital."
-        },
-        prompt: {
-          uz: "Nazorat ulushi: Investitsiya kiritilgach, ta'sischilar jamoasida kompaniyaning necha foiz ulushi qoladi?",
-          en: "Founders Equity: Post-money, what percentage of equity remains with the founders?"
-        },
-        inputLabel: { uz: "Ta'sischilar ulushi (%):", en: "Founders Equity (%):" },
-        val: 75,
-        hint: "(1,500,000 / (1,500,000 + 500,000)) * 100",
-        success: { uz: "To'g'ri! Post-Money $2.0M bo'lib, ta'sischilar 75% ulushni saqlab qoladi.", en: "Correct! Founders retain 75% equity." },
-        fail: { uz: "Xato: (1.5M / 2.0M) * 100 = 75%.", en: "Incorrect: (1.5M / 2.0M) * 100 = 75%." }
-      },
-      {
-        id: 8,
-        num: "№ 8",
-        name: { uz: "Amalga oshirish", en: "Execution & Scaling" },
-        focus: { uz: "MVP va kassa barqarorligi (Runway)", en: "MVP burn rate & runway governance" },
-        exercise: "Startup Capstone Project",
-        sit: {
-          uz: "Kassa zaxirasi (Runway): Yangi startap hisobida $45,000 zaxira mavjud. Korxonaning oylik sof xarajati (Net Burn Rate) $5,000 ni tashkil etadi.",
-          en: "Cash Runway: A tech venture holds $45,000 in cash reserves. The venture burns $5,000 net cash monthly."
-        },
-        prompt: {
-          uz: "Runway muddati: Korxona yangi sarmoyasiz yana necha oy davomida faoliyat yurita oladi?",
-          en: "Runway Horizon: How many months can the startup sustain operations before cash runs out?"
-        },
-        inputLabel: { uz: "Runway muddati (oy):", en: "Cash Runway (months):" },
-        val: 9,
-        hint: "45,000 / 5,000",
-        success: { uz: "To'g'ri! Kassa zaxirasi 9 oyga yetadi.", en: "Correct! Cash runway is 9 months." },
-        fail: { uz: "Xato: 45,000 / 5,000 = 9 oy.", en: "Incorrect: 45,000 / 5,000 = 9 months." }
-      }
-    ];
-
-    let activeCase = null;
-
-    // Tilni almashtirish
-    function toggleLang() {
-      currentLang = currentLang === 'uz' ? 'en' : 'uz';
-      document.querySelectorAll('.lang-lbl').forEach(el => el.innerText = currentLang.toUpperCase());
-      
-      const t = translations[currentLang];
-      document.getElementById('t-hdr-sub').innerText = t.hdr_sub;
-      document.getElementById('t-tab-cases').innerText = t.tab_cases;
-      document.getElementById('t-tab-duel-txt').innerText = t.tab_duel;
-      document.getElementById('t-tab-board-txt').innerText = t.tab_board;
-      document.getElementById('t-c-badge').innerText = t.c_badge;
-      document.getElementById('t-c-title').innerText = t.c_title;
-      document.getElementById('t-c-desc').innerText = t.c_desc;
-      document.getElementById('t-c-count').innerText = t.c_count;
-      document.getElementById('t-m1-title').innerText = t.m1_title;
-      document.getElementById('t-m1-desc').innerText = t.m1_desc;
-      document.getElementById('t-m1-p1').innerText = t.m1_p1;
-      document.getElementById('t-m1-p2').innerText = t.m1_p2;
-      document.getElementById('t-m1-btn').innerText = t.m1_btn;
-      document.getElementById('t-m7-title').innerText = t.m7_title;
-      document.getElementById('t-m7-desc').innerText = t.m7_desc;
-      document.getElementById('t-b-ebitda').innerText = t.b_ebitda;
-      document.getElementById('t-b-val').innerText = t.b_val;
-      document.getElementById('t-b-score').innerText = t.b_score;
-      document.getElementById('t-cm-sit-h').innerText = t.cm_sit_h;
-      document.getElementById('t-cm-task-h').innerText = t.cm_task_h;
-      document.getElementById('t-cm-btn-verify').innerText = t.cm_btn_verify;
-      document.getElementById('t-cm-btn-close').innerText = t.cm_btn_close;
-      document.getElementById('t-cm-verdict').innerText = t.cm_verdict;
-
-      renderCases();
-    }
-
-    // Tablarni almashtirish
-    function switchTab(tab) {
-      ['cases', 'duel', 'board'].forEach(t => {
-        document.getElementById(`view-${t}`).classList.add('hidden');
-        document.getElementById(`btn-tab-${t}`).className = 'px-3 py-1.5 rounded-lg text-slate-300 hover:text-white whitespace-nowrap transition';
-      });
-
-      document.getElementById(`view-${tab}`).classList.remove('hidden');
-      document.getElementById(`btn-tab-${tab}`).className = 'px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold whitespace-nowrap shadow';
-
-      if (tab === 'cases') renderCases();
-    }
-
-    // 8 ta Keysni chizish
-    function renderCases() {
-      const container = document.getElementById('cases-grid');
-      const t = translations[currentLang];
-      container.innerHTML = caseBank.map(c => `
-        <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-2xl flex flex-col justify-between space-y-3.5 hover:border-amber-500/50 transition shadow-lg">
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">${c.num}</span>
-              <span class="text-[11px] text-slate-400 font-mono font-medium">${c.exercise}</span>
-            </div>
-            <h4 class="text-sm sm:text-base font-extrabold text-white mt-1.5">${c.name[currentLang]}</h4>
-            <div class="text-xs text-emerald-400 font-medium mt-0.5"><i class="fa-solid fa-bullseye mr-1"></i>${c.focus[currentLang]}</div>
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 line-clamp-3">${c.sit[currentLang]}</p>
-          </div>
-          <button onclick="openModal(${c.id})" class="w-full py-2.5 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5">
-            <span>${t.btn_solve}</span> <i class="fa-solid fa-arrow-right text-xs"></i>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    // Modalni ochish
-    function openModal(id) {
-      activeCase = caseBank.find(x => x.id === id);
-      if (!activeCase) return;
-
-      document.getElementById('cm-badge').innerText = `${activeCase.num} : ${activeCase.exercise}`;
-      document.getElementById('cm-title').innerText = activeCase.name[currentLang];
-      document.getElementById('cm-sit').innerText = activeCase.sit[currentLang];
-      document.getElementById('cm-prompt').innerText = activeCase.prompt[currentLang];
-
-      document.getElementById('cm-inputs').innerHTML = `
-        <div>
-          <label class="text-xs text-slate-300 block mb-1 font-medium">${activeCase.inputLabel[currentLang]}</label>
-          <input type="number" id="cm-input-field" placeholder="${activeCase.hint}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-mono text-xs sm:text-sm focus:border-amber-500 focus:outline-none">
-        </div>
-      `;
-
-      document.getElementById('cm-res').classList.add('hidden');
-      document.getElementById('case-modal').classList.remove('hidden');
-    }
-
-    // Modalni yopish
-    function closeModal() {
-      document.getElementById('case-modal').classList.add('hidden');
-    }
-
-    // Javobni tekshirish
-    function checkCaseAnswer() {
-      if (!activeCase) return;
-      const val = parseFloat(document.getElementById('cm-input-field').value);
-      const resBox = document.getElementById('cm-res');
-      const scoreTxt = document.getElementById('cm-score');
-      const fbTxt = document.getElementById('cm-feedback');
-
-      if (val === activeCase.val) {
-        scoreTxt.innerText = currentLang === 'uz' ? "100 / 100 (To'g'ri!)" : "100 / 100 (Correct!)";
-        scoreTxt.className = "font-mono font-bold text-emerald-400 text-sm";
-        fbTxt.innerText = activeCase.success[currentLang];
-      } else {
-        scoreTxt.innerText = currentLang === 'uz' ? "30 / 100 (Xato)" : "30 / 100 (Incorrect)";
-        scoreTxt.className = "font-mono font-bold text-rose-400 text-sm";
-        fbTxt.innerText = activeCase.fail[currentLang];
-      }
-      resBox.classList.remove('hidden');
-    }
-
-    // Oddiy duel funksiyasi
-    function runSimpleDuel() {
-      const pA = parseInt(document.getElementById('c_a_p').value);
-      const pB = parseInt(document.getElementById('c_b_p').value);
-      const box = document.getElementById('duel-res-box');
-
-      let winner = pA < pB ? "1-Jamoa (Uzum Express)" : (pA > pB ? "2-Jamoa (Yandex / Express24)" : "Durang / Tie");
-      if (currentLang === 'en') {
-        winner = pA < pB ? "Team 1 (Uzum Express)" : (pA > pB ? "Team 2 (Yandex / Express24)" : "Tie / Draw");
-      }
-
-      box.innerHTML = `
-        <div class="font-bold text-emerald-400 mb-1">${currentLang==='uz'?'G\'olib:':'Winner:'} ${winner}</div>
-        <div>${currentLang==='uz'?'Past narx va yuqori hajm evaziga bozor ulushi qayta taqsimlandi.':'Market share was captured through competitive pricing.'}</div>
-      `;
-    }
-
-    // Boshlang'ich yuklash
-    window.onload = () => {
-      renderCases();
-    };
-  </script>
+  <!-- Skriptlar -->
+  <script src="/static/i18n.js"></script>
+  <script src="/static/cases.js"></script>
+  <script src="/static/app.js"></script>
 </body>
 </html>
