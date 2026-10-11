@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,30 +9,31 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
 
-    /* BIZLAB responsive readability patch v2 */
-    html { font-size: 17px; }
-    body { font-size: 1rem; line-height: 1.65; }
-    body .text-\\[10px\\] { font-size: .82rem !important; }
-    body .text-\\[11px\\] { font-size: .86rem !important; }
-    body .text-xs { font-size: .92rem !important; }
-    body .text-sm { font-size: 1rem !important; }
-    body .text-base { font-size: 1.05rem !important; }
-    button, input, select, textarea { font-size: inherit; }
-    button { line-height: 1.4; min-height: 2.25rem; }
-    input, select, textarea { min-height: 2.5rem; }
+    /* English edition: readable typography and responsive layout */
+    html { font-size: 18px; }
+    body { font-size: 18px !important; line-height: 1.65; }
+    body .text-\[10px\] { font-size: 14px !important; }
+    body .text-\[11px\] { font-size: 15px !important; }
+    body .text-xs { font-size: 15px !important; }
+    body .text-sm { font-size: 16px !important; }
+    body .text-base { font-size: 18px !important; }
+    body .text-lg { font-size: 21px !important; }
+    body .text-xl { font-size: 25px !important; }
+    body .text-2xl { font-size: 29px !important; }
+    body button, body input, body select, body textarea { font-size: inherit; }
+    body button { line-height: 1.4; min-height: 42px; }
+    body input, body select, body textarea { min-height: 44px; }
     button, input[type="range"] { touch-action: manipulation; }
     button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
     header .max-w-7xl { flex-wrap: wrap; gap: .75rem; }
     header .max-w-7xl > div:last-child { min-width: 0; max-width: 100%; }
-    header .max-w-7xl > div:last-child > div { max-width: calc(100vw - 7rem); scrollbar-width: thin; }
-    header .max-w-7xl > div:last-child > div button,
-    header .max-w-7xl > div:last-child > div a { flex: 0 0 auto; white-space: nowrap; }
+    header .max-w-7xl > div:last-child > div { max-width: calc(100vw - 2rem); scrollbar-width: thin; }
+    header .max-w-7xl > div:last-child > div button, header .max-w-7xl > div:last-child > div a { flex: 0 0 auto; white-space: nowrap; }
     main { min-width: 0; overflow-wrap: anywhere; }
-    main h1 { line-height: 1.25; }
+    main h1, main h2, main h3 { line-height: 1.3; }
     main p, main label, main li { line-height: 1.6; }
     .overflow-x-auto { -webkit-overflow-scrolling: touch; }
-    canvas, svg { max-width: 100%; }
-    iframe, img { max-width: 100%; height: auto; }
+    canvas, svg, img, iframe { max-width: 100%; }
     .grid { min-width: 0; }
     @media (min-width: 768px) {
       header .max-w-7xl { flex-wrap: nowrap; }
@@ -41,6 +42,10 @@
     }
     @media (max-width: 767px) {
       html { font-size: 16px; }
+      body { font-size: 16px !important; }
+      body .text-xs { font-size: 14px !important; }
+      body .text-\[10px\] { font-size: 13px !important; }
+      body .text-\[11px\] { font-size: 14px !important; }
       header .max-w-7xl { padding: .65rem .75rem; align-items: flex-start; }
       header .max-w-7xl > div:first-child { width: 100%; }
       header .max-w-7xl > div:last-child { width: 100%; display: flex; align-items: center; gap: .4rem; }
@@ -96,9 +101,9 @@
         </div>
 
         <!-- UZ / EN Switcher -->
-        <button onclick="toggleLang()" class="px-3 py-2 rounded-xl border border-amber-500/40 bg-slate-900 text-amber-400 hover:bg-slate-800 text-xs font-black transition flex items-center gap-1.5 shadow">
+        <button style="display:none" aria-hidden="true" onclick="toggleLang()" class="px-3 py-2 rounded-xl border border-amber-500/40 bg-slate-900 text-amber-400 hover:bg-slate-800 text-xs font-black transition flex items-center gap-1.5 shadow">
           <i class="fa-solid fa-globe"></i>
-          <span id="lang-indicator">UZ</span>
+          <span id="lang-indicator">EN</span>
         </button>
       </div>
     </div>
@@ -664,7 +669,7 @@
   </div>
 
   <script>
-    let currentLang = 'uz';
+    let currentLang = 'en';
     let duelRound = 1;
     let treasuryA = 250000000;
     let treasuryB = 250000000;
@@ -1719,9 +1724,79 @@
       });
     }
 
+    // English-only pass for remaining hard-coded UI labels, including dynamically created elements.
+    const englishUiMap = {
+      "TDIU 8 Kompetensiyali Virtual Laboratoriya & Boshqaruv Markazi":"TSUE 8-Competency Virtual Laboratory & Management Center",
+      "1-Qism: 8 Kompetensiya":"Part 1: 8 Competencies", "1. Bozor Jangi":"1. Market Battle", "2. Milliy Keyslar":"2. National Case Studies",
+      "3. Balans Auditi":"3. Balance Sheet Audit", "4. Optimal Zaxira":"4. Optimal Inventory", "5. Dinamik Narx":"5. Dynamic Pricing",
+      "6. Iqtisodiy Xavfsizlik":"6. Economic Security", "Boshqaruv Kengashi":"Board of Directors",
+      "RASMIY STANDART":"OFFICIAL STANDARD", "8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari":"8 Core Entrepreneurial Competency Case Studies",
+      "Bakalavriat va Magistratura bosqichi: Bozor tahlili, iqtisodiy formulalar va amaliy hisob-kitoblar.":"Undergraduate and graduate level: market analysis, economic formulas, and practical calculations.",
+      "Jami: 8 ta Akademik Keys":"Total: 8 Academic Case Studies", "Keysni Yechish":"Solve Case", "Metodik Qo'llanma":"Methodological Guide",
+      "Erkin Pul Mablag'lari:":"Available Cash:", "Marketing va reklama xarajatlari:":"Marketing and Advertising Expenses:",
+      "Xizmat sifati va infratuzilma investitsiyasi:":"Service Quality and Infrastructure Investment:",
+      "Ikkala jamoa narx va byudjet parametrlarini belgilab, hisoblash tugmasini bosing.":"Set the price and budget parameters for both teams, then click Calculate.",
+      "Xizmat ko'rsatilgan buyurtmalar:":"Orders Fulfilled:", "Egallaangan Bozor Ulushi (%)":"Captured Market Share (%)", "Yalpi Sof Foyda (so'm)":"Net Profit (UZS)",
+      "Qo'llanma":"Guide", "Bozor Xatarlari (Fors-major)":"Market Risks (Force Majeure)", "Soha Yo'nalishi":"Industry", "Keys Mavzusi":"Case Study Topic",
+      "3. Boshqaruv Modeli":"3. Management Model", "Masala Mazmuni:":"Problem Description:", "Nazariyani o'rgandim, Testga o'tish →":"I have studied the theory; proceed to the test →",
+      "Iqtisodiy Boshqaruv Simulyatori":"Economic Management Simulator", "Kutilmagan Fors-major Xatari!":"Unexpected Force Majeure Risk!",
+      "Qarorlarni tasdiqlash, Ekspert bilan himoyaga o'tish →":"Confirm decisions and proceed to the expert review →",
+      "Biznes boshqaruvi va iqtisodiy xavfsizlik kafedrasi":"Department of Business Management and Economic Security",
+      "Keys tahlili va ilmiy himoyasi muvaffaqiyatli yakunlanganini tasdiqlaydi.":"Certifies the successful completion of the case analysis and academic defense.",
+      "3-MODUL: BALANS TAHLILI":"MODULE 3: BALANCE SHEET ANALYSIS", "Dastlabki kassa defitsiti: -60 mln so'm/oy. Xarajatlar va qarz majburiyatlarini qayta taqsimlang.":"Initial cash deficit: UZS 60 million per month. Reallocate expenses and debt obligations.",
+      "Ma'muriy-boshqaruv xarajatlarini qisqartirish:":"Reduce Administrative and Management Expenses:", "Kredit qarzini to'lash muddatini uzaytirish:":"Extend the Loan Repayment Period:",
+      "4-MODUL: TA'MINOT LOGISTIKASI":"MODULE 4: SUPPLY CHAIN LOGISTICS", "Iqtisodiy Jihatdan Optimal Buyurtma Hajmi va Zaxiralar Boshqaruvi":"Economic Order Quantity and Inventory Management",
+      "Parametrlarni o'zgartiring — optimal buyurtma partiyasi va xarajatlar balansi avtomatik hisoblanadi.":"Adjust the parameters — the optimal order quantity and cost balance will be calculated automatically.",
+      "Bitta buyurtmani rasmiylashtirish va yetkazish xarajati (so'm):":"Ordering and Delivery Cost per Order (UZS):",
+      "1 birlik tovarning omborda yillik saqlash xarajati (so'm):":"Annual Storage Cost per Unit (UZS):", "Zaxiralar Matematik Xulosasi":"Inventory Optimization Results",
+      "Jonli hisob":"Live Calculation", "Kafolatlangan xavfsizlik zaxirasi:":"Safety Stock:", "Buyurtma va Saqlash Xarajatlari Balansi":"Ordering and Holding Cost Balance",
+      "5-MODUL: NARX STRATEGIYASI":"MODULE 5: PRICING STRATEGY", "Talabning Narx Elastikligi Asosida Dinamik Narx Belgilash":"Dynamic Pricing Based on Price Elasticity of Demand",
+      "Narx o'zgarishi darajasi va talab reaksiyasining sof marjaga ta'siri.":"How price changes and demand response affect net margins.", "Baza narxining o'zgarishi (%):":"Base Price Change (%):",
+      "Sof Foyda O'zgarishi Dinamikasi:":"Net Profit Change:", "6-MODUL: IQTISODIY XAVFSIZLIK":"MODULE 6: ECONOMIC SECURITY",
+      "Iqtisodiy Xavfsizlik & Moliyaviy Barqarorlik Stress-Testi":"Economic Security and Financial Resilience Stress Test",
+      "Valyuta kursi devalvatsiyasi va bojxona to'siqlari sharoitida korxona barqarorlik ko'rsatkichi.":"Measure business resilience under currency devaluation and customs barriers.",
+      "Favqulodda zaxira va komplayens fondi:":"Emergency Reserve and Compliance Fund:", "Korxonaning Chidamlilik va Omon Qolish Indeksi:":"Business Resilience and Survival Index:",
+      "BOSHQARUV KENGASHI":"BOARD OF DIRECTORS", "Kengash Qo'llanmasi":"Board Guide", "Aksiyadorlar va Boshqaruv Kengashiga Strategik Taqdimot":"Strategic Presentation to Shareholders and the Board",
+      "Korxona Bozor Kapitallashuvi":"Enterprise Market Capitalization", "Kengashning Boshqaruv Bahosi":"Board Governance Score", "Yopish":"Close",
+      "Keys Nomi":"Case Title", "Bozor Vaziyati:":"Market Situation:", "Iqtisodiy Masala & Hisob-kitob:":"Economic Problem and Calculations:", "Tekshirish va Baholash":"Check and Evaluate", "Natija:":"Result:",
+      "Taqsimot logistika markazlari (Hublar):":"Distribution Logistics Centers (Hubs):", "O'z kuryerlari":"In-house Couriers", "Marketing va mijoz oqimi byudjeti:":"Marketing and Customer Acquisition Budget:",
+      "Chakana narx ustamasi (Marja %):":"Retail Markup (Margin %):", "Tarmoqdagi do'konlar soni:":"Number of Stores in the Network:",
+      "Ichki mahalliylashtirish darajasi:":"Domestic Localization Rate:", "Boshlang'ich kapital xarajatlar:":"Initial Capital Expenditure:", "O'rtacha tortilgan kapital qiymati:":"Weighted Average Cost of Capital:", "Operatsion pul oqimi o'sishi:":"Operating Cash Flow Growth:",
+      "RAQOBAT ARENASI":"COMPETITIVE ARENA", "Uzum Express VS Yandex/Express24: Narx va Bozor Ulushi Raqobati":"Uzum Express vs. Yandex/Express24: Pricing and Market Share Competition",
+      "Kurno va Bertran oligopoliya modellari asosidagi strategik narx jangi.":"Strategic pricing competition based on Cournot and Bertrand oligopoly models.",
+      "Yetkazib berish tarif narxi:":"Delivery Fee:", "RAUND RAQOBAT NATIJASINI HISOBLASH":"CALCULATE ROUND RESULTS", "Raqobat Natijasi":"Competition Results", "Milliy Keyslar Banki":"National Case Study Library",
+      "Natijani tekshirish":"Check Result", "Assalomu alaykum! Simulyatsiya natijalaringizni ko'rib chiqdim. Ushbu iqtisodiy parametrlarni qanday dalillaysiz? Tanlangan yondashuv birlik tannarxiga qanday ta'sir qildi?":"Hello! I have reviewed your simulation results. How would you justify these economic parameters? How did your chosen approach affect unit cost?",
+      "TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI":"TASHKENT STATE UNIVERSITY OF ECONOMICS", "Tadqiqotchi":"Researcher",
+      "Inqirozdagi Korxona Balansini Qutqarish & Kassa Uzilishi Auditi":"Rescuing a Distressed Business Balance Sheet and Cash Flow Audit", "Oylik tejalgan xarajatlar miqdori:":"Monthly Cost Savings:", "Hisoblanmoqda...":"Calculating...",
+      "Optimal buyurtma hajmi:":"Economic Order Quantity:", "Yillik buyurtmalar chastotasi:":"Annual Order Frequency:", "Qayta buyurtma berish nuqtasi:":"Reorder Point:", "Zaxiralarni saqlashning yillik jami xarajati:":"Total Annual Inventory Holding Cost:",
+      "Yangi hisoblangan sotuv narxi:":"New Calculated Selling Price:", "Oldingi 6 ta modul qarorlari sintezi, korxona bozor kapitallashuvi va mustaqil direktorlar retsenziyalari.":"Synthesis of decisions from the previous six modules, enterprise market capitalization, and independent director reviews.",
+      "Kengash Bahosini Yangilash":"Refresh Board Evaluation", "Yakuniy Kengash Qarori":"Final Board Verdict", "Mustaqil C-Level Direktorlar Kengashi Xulosasi":"Independent C-Level Board Review",
+      "Boshqaruvchi:":"Executive:", "Ijroiya Strategik Hisobot (Executive Summary)":"Executive Strategic Report (Executive Summary)",
+      "Mazkur hisobot talaba tomonidan 6 ta asosiy biznes modulida qabul qilingan qarorlarining sintezini aks ettiradi.":"This report summarizes the decisions made by the student across the six core business modules.", "Kengash Bahosi:":"Board Score:",
+      "RAQOBAT NATIJASINI HISOBLASH":"CALCULATE COMPETITION RESULTS", "Erkin Pul Mablag'lari:":"Available Cash:", "Ma'muriy-boshqaruv xarajatlarini qisqartirish:":"Reduce Administrative and Management Expenses:",
+      "Akademik Metodik Konspekt:":"Academic Methodological Notes:", "Qo'llanmani Chop Etish (PDF)":"Print Guide (PDF)", "Proyektor Katta Ekrani":"Projector Display"
+    };
+    function translateRemainingUi(root = document.body) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+      for (const node of nodes) {
+        const original = node.nodeValue;
+        const trimmed = original.trim();
+        if (englishUiMap[trimmed]) node.nodeValue = original.replace(trimmed, englishUiMap[trimmed]);
+      }
+      root.querySelectorAll('input[placeholder],textarea[placeholder],button[title],a[title]').forEach(el => {
+        for (const attr of ['placeholder','title']) if (el.hasAttribute(attr) && englishUiMap[el.getAttribute(attr)]) el.setAttribute(attr, englishUiMap[el.getAttribute(attr)]);
+      });
+    }
+    const englishUiObserver = new MutationObserver(() => translateRemainingUi());
+    englishUiObserver.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
+
     // Sahifa yuklanganda 1-qism va uning keyslarini birinchi navbatda ko'rsatish
     window.onload = () => {
+      document.documentElement.lang = 'en';
+      currentLang = 'en';
       applyLanguageTexts();
+      translateRemainingUi();
       renderCaseList();
       switchView('cases');
       updateDuelCharts({ market_share: 50, net_profit: 25000000 }, { market_share: 50, net_profit: 25000000 });
