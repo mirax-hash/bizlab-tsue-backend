@@ -117,7 +117,7 @@ const caseBank = [
     val: 4,
     hint: "(24 * 30) / 180 = 720 / 180",
     success: { uz: "A'lo! LTV = $720, nisbat esa 4.0 karra. Bu juda sog'lom va foydali ko'rsatkich.", en: "Superb! LTV is $720, yielding an optimal 4.0x ratio." },
-    fail: { uz: "Xato hisoblandi: (24 * $30) / 180 = 4.0 karra.", en: "Incorrect: 720 / 180 = 4.0x." }
+    fail: { uz: "Xato hisoblandi: (24 * 30) / 180 = 4.0 karra.", en: "Incorrect: 720 / 180 = 4.0x." }
   },
   {
     id: 7,
