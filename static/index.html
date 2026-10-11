@@ -8,10 +8,54 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
-    .chat-scroll { max-height: 320px; overflow-y: auto; }
+
+    /* BIZLAB responsive readability patch v2 */
+    html { font-size: 17px; }
+    body { font-size: 1rem; line-height: 1.65; }
+    body .text-\\[10px\\] { font-size: .82rem !important; }
+    body .text-\\[11px\\] { font-size: .86rem !important; }
+    body .text-xs { font-size: .92rem !important; }
+    body .text-sm { font-size: 1rem !important; }
+    body .text-base { font-size: 1.05rem !important; }
+    button, input, select, textarea { font-size: inherit; }
+    button { line-height: 1.4; min-height: 2.25rem; }
+    input, select, textarea { min-height: 2.5rem; }
+    button, input[type="range"] { touch-action: manipulation; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+    header .max-w-7xl { flex-wrap: wrap; gap: .75rem; }
+    header .max-w-7xl > div:last-child { min-width: 0; max-width: 100%; }
+    header .max-w-7xl > div:last-child > div { max-width: calc(100vw - 7rem); scrollbar-width: thin; }
+    header .max-w-7xl > div:last-child > div button,
+    header .max-w-7xl > div:last-child > div a { flex: 0 0 auto; white-space: nowrap; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    main h1 { line-height: 1.25; }
+    main p, main label, main li { line-height: 1.6; }
+    .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+    canvas, svg { max-width: 100%; }
+    iframe, img { max-width: 100%; height: auto; }
+    .grid { min-width: 0; }
+    @media (min-width: 768px) {
+      header .max-w-7xl { flex-wrap: nowrap; }
+      header .max-w-7xl > div:last-child { flex: 1; justify-content: flex-end; }
+      header .max-w-7xl > div:last-child > div { max-width: min(75vw, 100%); }
+    }
+    @media (max-width: 767px) {
+      html { font-size: 16px; }
+      header .max-w-7xl { padding: .65rem .75rem; align-items: flex-start; }
+      header .max-w-7xl > div:first-child { width: 100%; }
+      header .max-w-7xl > div:last-child { width: 100%; display: flex; align-items: center; gap: .4rem; }
+      header .max-w-7xl > div:last-child > div { flex: 1; min-width: 0; overflow-x: auto; padding: .35rem; }
+      header .max-w-7xl > div:last-child > div button { padding: .55rem .7rem; }
+      main { padding-left: .75rem !important; padding-right: .75rem !important; padding-top: 1rem !important; }
+      main section { min-width: 0; }
+      main .p-6, main .p-5 { padding: 1rem; }
+      main .grid-cols-2, main .grid-cols-3, main .grid-cols-4 { grid-template-columns: minmax(0, 1fr) !important; }
+      #view-lab .grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+      .chat-scroll { max-height: 40vh; }
+      #resource-modal > div, #case-solve-modal > div { padding: 1rem; max-width: calc(100vw - 1rem); }
+      input, select, textarea { width: 100%; max-width: 100%; }
+    }
+    .chat-scroll { max-height: 270px; overflow-y: auto; }
     @media print {
       body * { visibility: hidden; }
       #printable-executive-deck, #printable-executive-deck * { visibility: visible; }
@@ -19,40 +63,40 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
 
   <!-- Header -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 lg:px-6 py-3.5 flex justify-between items-center gap-4">
-      <div class="flex items-center space-x-3.5">
-        <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-black px-4 py-2 rounded-xl text-xl tracking-wider shadow-lg">
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-black px-3.5 py-1.5 rounded-xl text-lg tracking-wider shadow-lg">
           BIZLAB
         </div>
         <div>
-          <h1 class="text-base font-extrabold tracking-wide text-white">BIZLAB TSUE PRO</h1>
-          <p class="text-xs text-slate-400 font-medium" id="hdr-sub">Toshkent Davlat Iqtisodiyot Universiteti — 8 Kompetensiyali Virtual Laboratoriya</p>
+          <h1 class="text-sm font-bold tracking-wide">BIZLAB TSUE PRO</h1>
+          <p class="text-[11px] text-slate-400" id="hdr-sub">TDIU 8 Kompetensiyali Virtual Laboratoriya & Boshqaruv Markazi</p>
         </div>
       </div>
-
-      <!-- Navigatsiya va Til Almashtirgich -->
-      <div class="flex items-center space-x-2.5">
-        <div class="flex items-center space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs lg:text-sm font-semibold overflow-x-auto">
-          <button onclick="switchView('cases')" id="tab-cases" class="px-3.5 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 shadow">
-            <i class="fa-solid fa-briefcase mr-1.5"></i> <span id="lbl-t-cases">1-Qism: 8 Kompetensiya</span>
+      <!-- Asosiy Navigatsiya Menyusi va Til Almashtirgich -->
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs overflow-x-auto">
+          <button onclick="switchView('cases')" id="tab-cases" class="px-3 py-1.5 rounded-lg font-black bg-amber-500 text-slate-950 shadow">
+            <i class="fa-solid fa-briefcase mr-1"></i> <span id="lbl-t-cases">1-Qism: 8 Kompetensiya</span>
           </button>
-          <button onclick="switchView('battle')" id="tab-battle" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">1. Bozor Jangi</button>
-          <button onclick="switchView('lab')" id="tab-lab" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">2. Milliy Keyslar</button>
-          <button onclick="switchView('forensic')" id="tab-forensic" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">3. Balans Auditi</button>
-          <button onclick="switchView('eoq')" id="tab-eoq" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">4. Optimal Zaxira</button>
-          <button onclick="switchView('pricing')" id="tab-pricing" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">5. Dinamik Narx</button>
-          <button onclick="switchView('security')" id="tab-security" class="px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition">6. Iqtisodiy Xavfsizlik</button>
-          <button onclick="switchView('board')" id="tab-board" class="px-3.5 py-2 rounded-lg text-amber-400 hover:text-white border border-amber-500/30 transition">
+          <button onclick="switchView('battle')" id="tab-battle" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">1. Bozor Jangi</button>
+          <button onclick="switchView('lab')" id="tab-lab" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">2. Milliy Keyslar</button>
+          <button onclick="switchView('forensic')" id="tab-forensic" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">3. Balans Auditi</button>
+          <button onclick="switchView('eoq')" id="tab-eoq" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">4. Optimal Zaxira</button>
+          <button onclick="switchView('pricing')" id="tab-pricing" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">5. Dinamik Narx</button>
+          <button onclick="switchView('security')" id="tab-security" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white">6. Iqtisodiy Xavfsizlik</button>
+          <button onclick="switchView('board')" id="tab-board" class="px-3 py-1.5 rounded-lg font-bold text-amber-400 hover:text-white border border-amber-500/30">
             <i class="fa-solid fa-chess-king mr-1"></i> <span id="lbl-t-board">Boshqaruv Kengashi</span>
           </button>
-          <a href="/scoreboard" target="_blank" class="px-3 py-2 rounded-lg text-amber-400 hover:bg-slate-900 transition" title="Katta Ekran / Scoreboard"><i class="fa-solid fa-tv"></i></a>
+          <a href="/scoreboard" target="_blank" class="px-2.5 py-1.5 rounded-lg text-amber-400 hover:bg-slate-900" title="Proyektor Katta Ekrani"><i class="fa-solid fa-tv"></i></a>
         </div>
 
-        <button onclick="toggleLang()" class="px-3.5 py-2 rounded-xl border border-amber-500/50 bg-slate-900 text-amber-400 hover:bg-slate-800 text-xs lg:text-sm font-black transition flex items-center gap-1.5 shadow">
+        <!-- UZ / EN Switcher -->
+        <button onclick="toggleLang()" class="px-3 py-2 rounded-xl border border-amber-500/40 bg-slate-900 text-amber-400 hover:bg-slate-800 text-xs font-black transition flex items-center gap-1.5 shadow">
           <i class="fa-solid fa-globe"></i>
           <span id="lang-indicator">UZ</span>
         </button>
@@ -60,127 +104,111 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 lg:px-6 py-6 flex-1 w-full space-y-6">
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
 
-    <!-- ================= 1-QISM: 8 KOMPETENSIYA KEYSLARI ================= -->
+    <!-- ================= 1-QISM: RASMIY 8 KOMPETENSIYA KEYSLARI ================= -->
     <section id="view-cases" class="space-y-6 block">
-      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/30 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
+      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border border-amber-500/30 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
         <div>
-          <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-md bg-amber-500 text-slate-950 font-mono" id="c-hero-badge">RASMIY STANDART</span>
-          <h2 class="text-2xl font-black text-white mt-2" id="c-hero-title">8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari</h2>
-          <p class="text-sm text-slate-300 mt-1 leading-relaxed" id="c-hero-desc">Bakalavriat va Magistratura bosqichi: Bozor tahlili, iqtisodiy formulalar va amaliy hisob-kitoblar.</p>
+          <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold" id="c-hero-badge">RASMIY STANDART</span>
+          <h2 class="text-xl font-black text-white mt-1" id="c-hero-title">8 Asosiy Tadbirkorlik Kompetensiyasi Keyslari</h2>
+          <p class="text-xs text-slate-300" id="c-hero-desc">Bakalavriat va Magistratura bosqichi: Bozor tahlili, iqtisodiy formulalar va amaliy hisob-kitoblar.</p>
         </div>
         <div class="text-right">
-          <span class="text-sm font-bold font-mono px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400" id="c-hero-count">Jami: 8 ta Akademik Keys</span>
+          <span class="text-xs font-mono text-amber-400" id="c-hero-count">Jami: 8 ta Akademik Keys</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="cases-grid-container"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="cases-grid-container">
+        <!-- Dinamik 8 ta keys bu yerga yuklanadi -->
+      </div>
     </section>
 
     <!-- 1-MODUL: BOZOR JANGI -->
     <section id="view-battle" class="space-y-6 hidden">
-      <div class="bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border-2 border-rose-500/30 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
+      <div class="bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border border-rose-500/30 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded bg-rose-600 text-white font-mono">RAQOBAT ARENASI</span>
-            <button onclick="openResourceModal('battle', 'video')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-full border border-amber-500/40 transition">
-              <i class="fa-solid fa-circle-play mr-1.5"></i> <span id="btn-v-battle">Video Dars</span>
+            <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-rose-600 text-white">RAQOBAT ARENASI</span>
+            <button onclick="openResourceModal('battle', 'video')" class="text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-amber-500/40">
+              <i class="fa-solid fa-circle-play mr-1"></i> <span id="btn-v-battle">Video Dars</span>
             </button>
-            <button onclick="openResourceModal('battle', 'guide')" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-slate-950 px-3 py-1 rounded-full border border-emerald-500/40 transition">
-              <i class="fa-solid fa-file-pdf mr-1.5"></i> <span id="btn-g-battle">Metodik Qo'llanma</span>
+            <button onclick="openResourceModal('battle', 'guide')" class="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+              <i class="fa-solid fa-file-pdf mr-1"></i> <span id="btn-g-battle">Metodik Qo'llanma</span>
             </button>
           </div>
-          <h2 class="text-xl lg:text-2xl font-black text-white mt-2" id="m1-h-title">Uzum Express VS Yandex/Express24: Narx va Bozor Ulushi Raqobati</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m1-h-desc">Kurno va Bertran oligopoliya modellari asosidagi strategik narx jangi.</p>
+          <h2 class="text-xl font-black text-white mt-1" id="m1-h-title">Uzum Express VS Yandex/Express24: Narx va Bozor Ulushi Raqobati</h2>
+          <p class="text-xs text-slate-300" id="m1-h-desc">Kurno va Bertran oligopoliya modellari asosidagi strategik narx jangi.</p>
         </div>
         <div class="text-right">
-          <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider" id="m1-round-title">Raund Bosqichi:</div>
-          <div class="text-xl font-black text-amber-400 font-mono mt-0.5" id="battle-round-lbl">1-Chorak (1/4)</div>
+          <div class="text-[11px] text-slate-400 font-semibold uppercase" id="m1-round-title">Raund Bosqichi:</div>
+          <div class="text-lg font-black text-amber-400" id="battle-round-lbl">1-Chorak (1/4)</div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-slate-900 border-2 border-emerald-500/50 p-6 rounded-2xl space-y-5 shadow-xl">
-          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wide flex items-center">
-              <span class="w-3 h-3 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> 1-Jamoa: Uzum Express
+        <div class="bg-slate-900 border-2 border-emerald-500/50 p-5 rounded-2xl space-y-4 shadow-xl">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold text-emerald-400 uppercase flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mr-2 animate-pulse"></span> 1-Jamoa: Uzum Express
             </h3>
-            <span class="text-sm text-slate-300"><span id="lbl-kassa-a">Erkin Pul Mablag'lari:</span> <strong id="treasury-a" class="text-emerald-400 font-mono">250,000,000 so'm</strong></span>
+            <span class="text-xs text-slate-400"><span id="lbl-kassa-a">Erkin Pul Mablag'lari:</span> <strong id="treasury-a" class="text-emerald-400">250,000,000 so'm</strong></span>
           </div>
-          <div class="text-sm space-y-4">
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-p1">Yetkazib berish tarif narxi:</span> <span id="v_a_p" class="font-bold text-emerald-400 font-mono">14,000 so'm</span></div>
-              <input type="range" id="c_a_p" min="8000" max="22000" step="1000" value="14000" oninput="document.getElementById('v_a_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer">
-            </div>
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-m1">Marketing va reklama xarajatlari:</span> <span id="v_a_m" class="font-bold text-emerald-400 font-mono">20,000,000 so'm</span></div>
-              <input type="range" id="c_a_m" min="5000000" max="45000000" step="2500000" value="20000000" oninput="document.getElementById('v_a_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer">
-            </div>
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-q1">Xizmat sifati va infratuzilma investitsiyasi:</span> <span id="v_a_q" class="font-bold text-emerald-400 font-mono">12,000,000 so'm</span></div>
-              <input type="range" id="c_a_q" min="4000000" max="25000000" step="1000000" value="12000000" oninput="document.getElementById('v_a_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer">
-            </div>
+          <div class="text-xs space-y-3">
+            <div><span id="lbl-m1-p1">Yetkazib berish tarif narxi:</span> <span id="v_a_p" class="font-bold text-emerald-400">14,000 so'm</span><input type="range" id="c_a_p" min="8000" max="22000" step="1000" value="14000" oninput="document.getElementById('v_a_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
+            <div><span id="lbl-m1-m1">Marketing va reklama xarajatlari:</span> <span id="v_a_m" class="font-bold text-emerald-400">20,000,000 so'm</span><input type="range" id="c_a_m" min="5000000" max="45000000" step="2500000" value="20000000" oninput="document.getElementById('v_a_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
+            <div><span id="lbl-m1-q1">Xizmat sifati va infratuzilma investitsiyasi:</span> <span id="v_a_q" class="font-bold text-emerald-400">12,000,000 so'm</span><input type="range" id="c_a_q" min="4000000" max="25000000" step="1000000" value="12000000" oninput="document.getElementById('v_a_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-emerald-500 cursor-pointer"></div>
           </div>
         </div>
 
-        <div class="bg-slate-900 border-2 border-rose-500/50 p-6 rounded-2xl space-y-5 shadow-xl">
-          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h3 class="text-sm font-bold text-rose-400 uppercase tracking-wide flex items-center">
-              <span class="w-3 h-3 rounded-full bg-rose-400 mr-2 animate-pulse"></span> 2-Jamoa: Yandex / Express24
+        <div class="bg-slate-900 border-2 border-rose-500/50 p-5 rounded-2xl space-y-4 shadow-xl">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold text-rose-400 uppercase flex items-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-400 mr-2 animate-pulse"></span> 2-Jamoa: Yandex / Express24
             </h3>
-            <span class="text-sm text-slate-300"><span id="lbl-kassa-b">Erkin Pul Mablag'lari:</span> <strong id="treasury-b" class="text-rose-400 font-mono">250,000,000 so'm</strong></span>
+            <span class="text-xs text-slate-400"><span id="lbl-kassa-b">Erkin Pul Mablag'lari:</span> <strong id="treasury-b" class="text-rose-400">250,000,000 so'm</strong></span>
           </div>
-          <div class="text-sm space-y-4">
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-p2">Yetkazib berish tarif narxi:</span> <span id="v_b_p" class="font-bold text-rose-400 font-mono">15,000 so'm</span></div>
-              <input type="range" id="c_b_p" min="8000" max="22000" step="1000" value="15000" oninput="document.getElementById('v_b_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer">
-            </div>
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-m2">Marketing va reklama xarajatlari:</span> <span id="v_b_m" class="font-bold text-rose-400 font-mono">18,000,000 so'm</span></div>
-              <input type="range" id="c_b_m" min="5000000" max="45000000" step="2500000" value="18000000" oninput="document.getElementById('v_b_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer">
-            </div>
-            <div>
-              <div class="flex justify-between mb-1"><span id="lbl-m1-q2">Xizmat sifati va infratuzilma investitsiyasi:</span> <span id="v_b_q" class="font-bold text-rose-400 font-mono">10,000,000 so'm</span></div>
-              <input type="range" id="c_b_q" min="4000000" max="25000000" step="1000000" value="10000000" oninput="document.getElementById('v_b_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer">
-            </div>
+          <div class="text-xs space-y-3">
+            <div><span id="lbl-m1-p2">Yetkazib berish tarif narxi:</span> <span id="v_b_p" class="font-bold text-rose-400">15,000 so'm</span><input type="range" id="c_b_p" min="8000" max="22000" step="1000" value="15000" oninput="document.getElementById('v_b_p').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
+            <div><span id="lbl-m1-m2">Marketing va reklama xarajatlari:</span> <span id="v_b_m" class="font-bold text-rose-400">18,000,000 so'm</span><input type="range" id="c_b_m" min="5000000" max="45000000" step="2500000" value="18000000" oninput="document.getElementById('v_b_m').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
+            <div><span id="lbl-m1-q2">Xizmat sifati va infratuzilma investitsiyasi:</span> <span id="v_b_q" class="font-bold text-rose-400">10,000,000 so'm</span><input type="range" id="c_b_q" min="4000000" max="25000000" step="1000000" value="10000000" oninput="document.getElementById('v_b_q').innerText=parseInt(this.value).toLocaleString()+' so\'m'" class="w-full accent-rose-500 cursor-pointer"></div>
           </div>
         </div>
       </div>
 
       <div class="text-center">
-        <button id="btn-run-duel" onclick="runDuelAction()" class="px-8 py-4 bg-gradient-to-r from-amber-500 via-rose-600 to-indigo-600 hover:opacity-95 text-white font-extrabold rounded-xl text-sm shadow-2xl transition transform hover:scale-[1.01]">
+        <button id="btn-run-duel" onclick="runDuelAction()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 via-rose-600 to-indigo-600 hover:opacity-95 text-white font-black rounded-xl text-xs shadow-2xl transition transform hover:scale-[1.01]">
           <i class="fa-solid fa-bolt-lightning mr-2"></i> <span id="btn-duel-txt">RAUND RAQOBAT NATIJASINI HISOBLASH</span>
         </button>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-          <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wide" id="lbl-duel-res-h">Raqobat Natijasi</h4>
-          <span id="duel-winner-badge" class="text-xs font-bold px-3.5 py-1.5 rounded-full bg-slate-800 text-slate-400 font-mono">Boshlanmadi</span>
+      <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+          <h4 class="text-xs font-bold text-slate-300 uppercase" id="lbl-duel-res-h">Raqobat Natijasi</h4>
+          <span id="duel-winner-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-400">Boshlanmadi</span>
         </div>
-        <div id="duel-analysis-text" class="p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-300 leading-relaxed">
+        <div id="duel-analysis-text" class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
           Ikkala jamoa narx va byudjet parametrlarini belgilab, hisoblash tugmasini bosing.
         </div>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <div class="bg-emerald-950/20 border border-emerald-500/30 p-4 rounded-xl space-y-1.5">
-            <div class="font-extrabold text-emerald-400 flex justify-between text-base"><span>Uzum Express</span><span id="res-a-share" class="font-mono">50%</span></div>
-            <div><span id="lbl-res-ord-a">Xizmat ko'rsatilgan buyurtmalar:</span> <strong id="res-a-orders" class="text-white font-mono">12,500 ta</strong></div>
-            <div><span id="lbl-res-np-a">Davr Sof Foydasi:</span> <strong id="res-a-profit" class="text-emerald-400 font-mono text-base">+25.0 mln</strong></div>
+        <div class="grid grid-cols-2 gap-4 text-xs">
+          <div class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-xl space-y-1">
+            <div class="font-extrabold text-emerald-400 flex justify-between"><span>Uzum Express</span><span id="res-a-share">50%</span></div>
+            <div><span id="lbl-res-ord-a">Xizmat ko'rsatilgan buyurtmalar:</span> <strong id="res-a-orders" class="text-white">12,500 ta</strong></div>
+            <div><span id="lbl-res-np-a">Davr Sof Foydasi:</span> <strong id="res-a-profit" class="text-emerald-400">+25.0 mln</strong></div>
           </div>
-          <div class="bg-rose-950/20 border border-rose-500/30 p-4 rounded-xl space-y-1.5">
-            <div class="font-extrabold text-rose-400 flex justify-between text-base"><span>Yandex / Express24</span><span id="res-b-share" class="font-mono">50%</span></div>
-            <div><span id="lbl-res-ord-b">Xizmat ko'rsatilgan buyurtmalar:</span> <strong id="res-b-orders" class="text-white font-mono">12,500 ta</strong></div>
-            <div><span id="lbl-res-np-b">Davr Sof Foydasi:</span> <strong id="res-b-profit" class="text-rose-400 font-mono text-base">+25.0 mln</strong></div>
+          <div class="bg-rose-950/20 border border-rose-500/30 p-3 rounded-xl space-y-1">
+            <div class="font-extrabold text-rose-400 flex justify-between"><span>Yandex / Express24</span><span id="res-b-share">50%</span></div>
+            <div><span id="lbl-res-ord-b">Xizmat ko'rsatilgan buyurtmalar:</span> <strong id="res-b-orders" class="text-white">12,500 ta</strong></div>
+            <div><span id="lbl-res-np-b">Davr Sof Foydasi:</span> <strong id="res-b-profit" class="text-rose-400">+25.0 mln</strong></div>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-          <div class="h-48 flex flex-col items-center">
-            <span class="text-xs text-slate-400 mb-2 font-semibold" id="lbl-pie-h">Egallaangan Bozor Ulushi (%)</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="h-40 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1" id="lbl-pie-h">Egallaangan Bozor Ulushi (%)</span>
             <canvas id="duelPieChart"></canvas>
           </div>
-          <div class="h-48 flex flex-col items-center">
-            <span class="text-xs text-slate-400 mb-2 font-semibold" id="lbl-bar-h">Yalpi Sof Foyda (so'm)</span>
+          <div class="h-40 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1" id="lbl-bar-h">Yalpi Sof Foyda (so'm)</span>
             <canvas id="duelBarChart"></canvas>
           </div>
         </div>
@@ -190,49 +218,49 @@
     <!-- 2-MODUL: MILLIY KEYSLAR -->
     <section id="view-lab" class="grid grid-cols-1 lg:grid-cols-12 gap-6 hidden">
       <aside class="lg:col-span-4 space-y-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <div class="flex justify-between items-center mb-3.5">
-            <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wide flex items-center">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase flex items-center">
               <i class="fa-solid fa-layer-group text-emerald-400 mr-2"></i> <span id="lbl-nat-bank">Milliy Keyslar Banki</span>
             </h3>
-            <button onclick="openResourceModal('lab', 'guide')" class="text-xs text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-full" id="btn-g-lab">
+            <button onclick="openResourceModal('lab', 'guide')" class="text-[10px] text-emerald-400 font-bold border border-emerald-500/40 px-2 py-0.5 rounded-full" id="btn-g-lab">
               Qo'llanma
             </button>
           </div>
-          <div id="missions-list" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
+          <div id="missions-list" class="space-y-2 max-h-[48vh] overflow-y-auto pr-1"></div>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
-          <h4 class="text-sm font-bold text-amber-400 uppercase tracking-wide flex items-center">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-xl">
+          <h4 class="text-xs font-bold text-amber-400 uppercase flex items-center">
             <i class="fa-solid fa-bolt mr-2 animate-bounce"></i> <span id="lbl-nat-shocks">Bozor Xatarlari (Fors-major)</span>
           </h4>
-          <div id="shocks-container" class="space-y-2.5"></div>
+          <div id="shocks-container" class="space-y-2"></div>
         </div>
       </aside>
 
-      <section class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl">
-        <div class="border-b border-slate-800 pb-4 flex justify-between items-start">
+      <section class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 shadow-xl">
+        <div class="border-b border-slate-800 pb-3 flex justify-between items-start">
           <div>
-            <span id="active-badge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Soha Yo'nalishi</span>
-            <h2 id="active-title" class="text-xl font-extrabold text-white mt-1.5">Keys Mavzusi</h2>
-            <p id="active-desc" class="text-sm text-slate-300 mt-1 leading-relaxed">Tavsif...</p>
+            <span id="active-badge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Soha Yo'nalishi</span>
+            <h2 id="active-title" class="text-lg font-black text-white mt-1">Keys Mavzusi</h2>
+            <p id="active-desc" class="text-xs text-slate-400 mt-1">Tavsif...</p>
           </div>
-          <button onclick="openResourceModal('lab', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-3 py-1.5 rounded-xl bg-slate-950">
-            <i class="fa-solid fa-play mr-1.5"></i> <span id="btn-v-lab">Video</span>
+          <button onclick="openResourceModal('lab', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-2.5 py-1 rounded-xl bg-slate-950">
+            <i class="fa-solid fa-play mr-1"></i> <span id="btn-v-lab">Video</span>
           </button>
         </div>
 
-        <div class="grid grid-cols-4 gap-2 text-center text-xs lg:text-sm font-semibold">
-          <button onclick="gotoLabStep(1)" id="lab-step-btn-1" class="py-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center">
-            <i class="fa-solid fa-circle-play text-lg"></i><span class="mt-1" id="lbl-s1">1. Nazariy Asos</span>
+        <div class="grid grid-cols-4 gap-2 text-center text-xs font-semibold">
+          <button onclick="gotoLabStep(1)" id="lab-step-btn-1" class="py-2.5 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center">
+            <i class="fa-solid fa-circle-play text-base"></i><span class="text-[11px] mt-1" id="lbl-s1">1. Nazariy Asos</span>
           </button>
-          <button onclick="gotoLabStep(2)" id="lab-step-btn-2" class="py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
-            <i class="fa-solid fa-clipboard-check text-lg"></i><span class="mt-1" id="lbl-s2">2. Sinov Testi</span>
+          <button onclick="gotoLabStep(2)" id="lab-step-btn-2" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-clipboard-check text-base"></i><span class="text-[11px] mt-1" id="lbl-s2">2. Sinov Testi</span>
           </button>
-          <button onclick="gotoLabStep(3)" id="lab-step-btn-3" class="py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
-            <i class="fa-solid fa-sliders text-lg"></i><span class="mt-1" id="lbl-s3">3. Boshqaruv Modeli</span>
+          <button onclick="gotoLabStep(3)" id="lab-step-btn-3" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-sliders text-base"></i><span class="text-[11px] mt-1" id="lbl-s3">3. Boshqaruv Modeli</span>
           </button>
-          <button onclick="gotoLabStep(4)" id="lab-step-btn-4" class="py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
-            <i class="fa-solid fa-comments text-lg"></i><span class="mt-1" id="lbl-s4">4. Ekspert Himoyasi</span>
+          <button onclick="gotoLabStep(4)" id="lab-step-btn-4" class="py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center">
+            <i class="fa-solid fa-comments text-base"></i><span class="text-[11px] mt-1" id="lbl-s4">4. Ekspert Himoyasi</span>
           </button>
         </div>
 
@@ -241,95 +269,95 @@
           <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-800 bg-black">
             <iframe id="video-frame" class="w-full h-full" src="" title="Video lecture" frameborder="0" allowfullscreen></iframe>
           </div>
-          <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-300 leading-relaxed">
-            <h4 class="font-bold text-white mb-1.5 flex items-center"><i class="fa-solid fa-graduation-cap text-emerald-400 mr-2"></i> Masala Mazmuni:</h4>
+          <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
+            <h4 class="font-bold text-white mb-1"><i class="fa-solid fa-graduation-cap text-emerald-400 mr-1.5"></i> Masala Mazmuni:</h4>
             <p id="theory-text">Yuklanmoqda...</p>
           </div>
-          <button onclick="gotoLabStep(2)" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition" id="btn-next-quiz">
+          <button onclick="gotoLabStep(2)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition" id="btn-next-quiz">
             Nazariyani o'rgandim, Testga o'tish →
           </button>
         </div>
 
         <!-- 2-BOSQICH -->
         <div id="lab-step-2" class="space-y-4 hidden">
-          <h3 class="text-base font-bold text-white border-b border-slate-800 pb-2.5" id="lbl-quiz-h">Vaziyatli Bilim Sinovi</h3>
-          <div id="quiz-container" class="space-y-3.5"></div>
-          <button onclick="submitQuizAction()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition" id="btn-quiz-check">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2" id="lbl-quiz-h">Vaziyatli Bilim Sinovi</h3>
+          <div id="quiz-container" class="space-y-3"></div>
+          <button onclick="submitQuizAction()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition" id="btn-quiz-check">
             Natijani tekshirish
           </button>
-          <div id="quiz-result-box" class="p-4 rounded-xl text-sm hidden"></div>
+          <div id="quiz-result-box" class="p-3 rounded-xl text-xs hidden"></div>
         </div>
 
         <!-- 3-BOSQICH -->
         <div id="lab-step-3" class="space-y-5 hidden">
-          <div class="border-b border-slate-800 pb-2.5 flex justify-between items-center">
-            <h3 class="text-base font-bold text-white" id="lbl-sim-h">Iqtisodiy Boshqaruv Simulyatori</h3>
+          <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-white" id="lbl-sim-h">Iqtisodiy Boshqaruv Simulyatori</h3>
             <div id="lab-shock-alert" class="hidden text-xs bg-red-950 border border-red-500 text-red-300 px-3 py-1 rounded-lg font-bold">
               Kutilmagan Fors-major Xatari!
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
-            <div id="lab-dynamic-controls" class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4"></div>
-            <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col justify-between space-y-4">
-              <div id="lab-dynamic-kpis" class="grid grid-cols-3 gap-2.5 text-center border-b border-slate-800 pb-3"></div>
-              <div class="h-32 flex justify-center"><canvas id="classicBarChart"></canvas></div>
-              <div class="h-28 flex justify-center"><canvas id="classicPieChart"></canvas></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div id="lab-dynamic-controls" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4"></div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between space-y-3">
+              <div id="lab-dynamic-kpis" class="grid grid-cols-3 gap-2 text-center border-b border-slate-800 pb-2"></div>
+              <div class="h-28 flex justify-center"><canvas id="classicBarChart"></canvas></div>
+              <div class="h-24 flex justify-center"><canvas id="classicPieChart"></canvas></div>
             </div>
           </div>
-          <button onclick="gotoLabStep(4)" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition shadow-lg" id="btn-next-ai">
+          <button onclick="gotoLabStep(4)" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition shadow-lg" id="btn-next-ai">
             Qarorlarni tasdiqlash, Ekspert bilan himoyaga o'tish →
           </button>
         </div>
 
         <!-- 4-BOSQICH -->
         <div id="lab-step-4" class="space-y-4 hidden">
-          <div class="border-b border-slate-800 pb-2.5 flex justify-between items-center">
-            <h3 class="text-base font-bold text-white flex items-center">
+          <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-white flex items-center">
               <i class="fa-solid fa-graduation-cap text-purple-400 mr-2"></i> <span id="lbl-ai-prof-h">Ilmiy Ekspert oldida Qarorlar Himoyasi (3 Bosqich)</span>
             </h3>
-            <span class="text-xs bg-purple-950 border border-purple-700 text-purple-300 px-3 py-1 rounded-full font-bold font-mono">
+            <span class="text-xs bg-purple-950 border border-purple-700 text-purple-300 px-2.5 py-0.5 rounded-full font-bold">
               Bosqich: <span id="round-idx-lbl">1 / 3</span>
             </span>
           </div>
-          <div id="chat-box" class="chat-scroll space-y-3.5 bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm">
-            <div class="flex items-start space-x-3">
-              <div class="bg-purple-900/60 p-2 rounded-lg text-purple-300"><i class="fa-solid fa-user-tie"></i></div>
-              <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-slate-200 max-w-[85%] shadow leading-relaxed">
+          <div id="chat-box" class="chat-scroll space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs">
+            <div class="flex items-start space-x-2">
+              <div class="bg-purple-900/60 p-1.5 rounded-lg text-purple-300"><i class="fa-solid fa-user-tie"></i></div>
+              <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-200 max-w-[85%] shadow">
                 <strong>Ilmiy Ekspert:</strong> Assalomu alaykum! Simulyatsiya natijalaringizni ko'rib chiqdim. Ushbu iqtisodiy parametrlarni qanday dalillaysiz? Tanlangan yondashuv birlik tannarxiga qanday ta'sir qildi?
               </div>
             </div>
           </div>
-          <div class="flex space-x-2.5">
-            <input type="text" id="chat-input" onkeydown="if(event.key==='Enter') sendChatMsg()" class="flex-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Iqtisodiy dalillaringizni yozing...">
-            <button onclick="sendChatMsg()" id="chat-send-btn" class="px-6 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-sm transition flex items-center">
-              <i class="fa-solid fa-paper-plane mr-2"></i> <span id="btn-chat-send">Yuborish</span>
+          <div class="flex space-x-2">
+            <input type="text" id="chat-input" onkeydown="if(event.key==='Enter') sendChatMsg()" class="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Iqtisodiy dalillaringizni yozing...">
+            <button onclick="sendChatMsg()" id="chat-send-btn" class="px-5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs transition flex items-center">
+              <i class="fa-solid fa-paper-plane mr-1.5"></i> <span id="btn-chat-send">Yuborish</span>
             </button>
           </div>
 
           <!-- Diplom Sertifikat -->
           <div id="certificate-card" class="mt-4 hidden">
-            <div id="printable-certificate" class="p-8 bg-gradient-to-br from-slate-900 via-emerald-950/80 to-slate-900 border-2 border-emerald-500/80 rounded-2xl shadow-2xl text-center space-y-5">
-              <div class="flex justify-between items-center border-b border-emerald-800/60 pb-4">
+            <div id="printable-certificate" class="p-6 bg-gradient-to-br from-slate-900 via-emerald-950/80 to-slate-900 border-2 border-emerald-500/80 rounded-2xl shadow-2xl text-center space-y-4">
+              <div class="flex justify-between items-center border-b border-emerald-800/60 pb-3">
                 <div class="text-left">
-                  <div class="text-sm font-black tracking-widest text-emerald-400">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</div>
-                  <div class="text-xs text-slate-400">Biznes boshqaruvi va iqtisodiy xavfsizlik kafedrasi</div>
+                  <div class="text-xs font-black tracking-widest text-emerald-400">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</div>
+                  <div class="text-[10px] text-slate-400">Biznes boshqaruvi va iqtisodiy xavfsizlik kafedrasi</div>
                 </div>
-                <div class="bg-emerald-500/20 text-emerald-400 px-3.5 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/30">TASDIQLANGAN SERTIFIKAT</div>
+                <div class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded text-xs font-bold border border-emerald-500/30">TASDIQLANGAN SERTIFIKAT</div>
               </div>
-              <h3 class="text-xl font-black text-white mt-1">STRATEGIK BOSHQARUV QARORLARI HIMOYASI SERTIFIKATI</h3>
-              <p class="text-sm text-slate-300 max-w-lg mx-auto leading-relaxed">
+              <h3 class="text-lg font-black text-white mt-1">STRATEGIK BOSHQUVR QARORLARI HIMOYASI SERTIFIKATI</h3>
+              <p class="text-xs text-slate-300 max-w-lg mx-auto">
                 Ushbu hujjat talaba tomonidan virtual laboratoriyada <span class="text-emerald-400 font-bold" id="cert-mission-name">Keys</span> tahlili va ilmiy himoyasi muvaffaqiyatli yakunlanganini tasdiqlaydi.
               </p>
-              <div class="grid grid-cols-3 gap-3 bg-slate-950/80 p-4 rounded-xl border border-slate-800 text-sm">
-                <div><div class="text-xs text-slate-400">Tadqiqotchi</div><div class="font-bold text-white mt-0.5">Mirzarakhim B.</div></div>
-                <div><div class="text-xs text-slate-400">Umumiy Ball</div><div class="font-bold text-emerald-400 font-mono text-base mt-0.5" id="cert-score-lbl">98 / 100</div></div>
-                <div><div class="text-xs text-slate-400">Sana</div><div class="font-bold text-slate-300 mt-0.5" id="cert-date-lbl">Bugun</div></div>
+              <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs">
+                <div><div class="text-[10px] text-slate-500">Tadqiqotchi</div><div class="font-bold text-white">Mirzarakhim B.</div></div>
+                <div><div class="text-[10px] text-slate-500">Umumiy Ball</div><div class="font-bold text-emerald-400" id="cert-score-lbl">98 / 100</div></div>
+                <div><div class="text-[10px] text-slate-500">Sana</div><div class="font-bold text-slate-300" id="cert-date-lbl">Bugun</div></div>
               </div>
               <div class="flex justify-between items-center pt-2">
-                <div class="font-mono text-sm text-emerald-400 font-bold" id="cert-id-lbl">TSUE-BIZLAB-XXXX</div>
-                <img id="cert-qr-img" src="" alt="QR" class="w-16 h-16 rounded border border-slate-700 bg-white p-1">
+                <div class="font-mono text-[11px] text-emerald-400 font-bold" id="cert-id-lbl">TSUE-BIZLAB-XXXX</div>
+                <img id="cert-qr-img" src="" alt="QR" class="w-14 h-14 rounded border border-slate-700 bg-white p-1">
               </div>
-              <button onclick="window.print()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-bold transition shadow-lg">
+              <button onclick="window.print()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg">
                 <i class="fa-solid fa-file-pdf mr-2"></i> Sertifikatni yuklab olish (PDF)
               </button>
             </div>
@@ -339,99 +367,87 @@
     </section>
 
     <!-- 3-MODUL: BALANS AUDITI -->
-    <section id="view-forensic" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-6 hidden">
-      <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+    <section id="view-forensic" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
         <div>
-          <span class="text-xs font-black uppercase px-3 py-1 rounded bg-red-950 text-red-400 border border-red-800 font-mono">3-MODUL: BALANS TAHLILI</span>
-          <h2 class="text-xl lg:text-2xl font-black text-white mt-2" id="m3-h-title">Inqirozdagi Korxona Balansini Qutqarish & Kassa Uzilishi Auditi</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m3-h-desc">Dastlabki kassa defitsiti: -60 mln so'm/oy. Xarajatlar va qarz majburiyatlarini qayta taqsimlang.</p>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-800">3-MODUL: BALANS TAHLILI</span>
+          <h2 class="text-lg font-black text-white mt-1" id="m3-h-title">Inqirozdagi Korxona Balansini Qutqarish & Kassa Uzilishi Auditi</h2>
+          <p class="text-xs text-slate-400" id="m3-h-desc">Dastlabki kassa defitsiti: -60 mln so'm/oy. Xarajatlar va qarz majburiyatlarini qayta taqsimlang.</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="openResourceModal('forensic', 'video')" class="text-xs font-bold text-amber-400 border border-amber-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
-          <button onclick="openResourceModal('forensic', 'guide')" class="text-xs font-bold text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
+          <button onclick="openResourceModal('forensic', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
+          <button onclick="openResourceModal('forensic', 'guide')" class="text-xs text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
-          <h4 class="font-bold text-white text-base" id="lbl-anti-levers">Inqirozga Qarshi Richaglar</h4>
-          <div>
-            <div class="flex justify-between mb-1"><span id="lbl-m3-admin">Ma'muriy-boshqaruv xarajatlarini qisqartirish:</span> <span id="v_fa_admin" class="text-emerald-400 font-bold font-mono">20%</span></div>
-            <input type="range" id="c_fa_admin" min="0" max="50" value="20" oninput="document.getElementById('v_fa_admin').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500">
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span id="lbl-m3-debt">Kredit qarzini to'lash muddatini uzaytirish:</span> <span id="v_fa_debt" class="text-emerald-400 font-bold font-mono">12 oy</span></div>
-            <input type="range" id="c_fa_debt" min="0" max="24" value="12" oninput="document.getElementById('v_fa_debt').innerText=this.value+' oy'; runForensicAction()" class="w-full accent-emerald-500">
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span id="lbl-m3-staff">Shtatlar sonini optimallashtirish:</span> <span id="v_fa_staff" class="text-emerald-400 font-bold font-mono">15%</span></div>
-            <input type="range" id="c_fa_staff" min="0" max="40" value="15" oninput="document.getElementById('v_fa_staff').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500">
-          </div>
-          <div>
-            <div class="flex justify-between mb-1"><span id="lbl-m3-inv">Sekin aylanuvchi tovar qoldiqlarini naqdlashtirish:</span> <span id="v_fa_inv" class="text-emerald-400 font-bold font-mono">25%</span></div>
-            <input type="range" id="c_fa_inv" min="0" max="30" value="25" oninput="document.getElementById('v_fa_inv').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500">
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <h4 class="font-bold text-white" id="lbl-anti-levers">Inqirozga Qarshi Richaglar</h4>
+          <div><span id="lbl-m3-admin">Ma'muriy-boshqaruv xarajatlarini qisqartirish:</span> <span id="v_fa_admin" class="text-emerald-400 font-bold">20%</span><input type="range" id="c_fa_admin" min="0" max="50" value="20" oninput="document.getElementById('v_fa_admin').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div><span id="lbl-m3-debt">Kredit qarzini to'lash muddatini uzaytirish:</span> <span id="v_fa_debt" class="text-emerald-400 font-bold">12 oy</span><input type="range" id="c_fa_debt" min="0" max="24" value="12" oninput="document.getElementById('v_fa_debt').innerText=this.value+' oy'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div><span id="lbl-m3-staff">Shtatlar sonini optimallashtirish:</span> <span id="v_fa_staff" class="text-emerald-400 font-bold">15%</span><input type="range" id="c_fa_staff" min="0" max="40" value="15" oninput="document.getElementById('v_fa_staff').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
+          <div><span id="lbl-m3-inv">Sekin aylanuvchi tovar qoldiqlarini naqdlashtirish:</span> <span id="v_fa_inv" class="text-emerald-400 font-bold">25%</span><input type="range" id="c_fa_inv" min="0" max="30" value="25" oninput="document.getElementById('v_fa_inv').innerText=this.value+'%'; runForensicAction()" class="w-full accent-emerald-500"></div>
         </div>
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4 flex flex-col justify-between">
-          <h4 class="font-bold text-white text-base" id="lbl-audit-summary">Moliyaviy Audit Xulosasi</h4>
-          <div class="space-y-3">
-            <div class="flex justify-between"><span id="lbl-init-gap">Dastlabki Kassa Defitsiti:</span> <strong class="text-red-400 font-mono text-base">-60,000,000 so'm</strong></div>
-            <div class="flex justify-between"><span id="lbl-saved-mon">Oylik tejalgan xarajatlar:</span> <strong id="fa_saved" class="text-emerald-400 font-mono text-base">0 so'm</strong></div>
-            <div class="flex justify-between"><span id="lbl-final-cf">Yakuniy Sof Pul Oqimi:</span> <strong id="fa_cf" class="text-white font-mono text-lg">0 so'm</strong></div>
-            <div id="fa_verdict" class="p-3.5 rounded-xl font-bold text-center mt-2">Hisoblanmoqda...</div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+          <h4 class="font-bold text-white" id="lbl-audit-summary">Moliyaviy Audit Xulosasi</h4>
+          <div class="space-y-2">
+            <div><span id="lbl-init-gap">Dastlabki Kassa Uzilishi (Defitsit):</span> <strong class="text-red-400">-60,000,000 so'm</strong></div>
+            <div><span id="lbl-saved-mon">Oylik tejalgan xarajatlar miqdori:</span> <strong id="fa_saved" class="text-emerald-400">0 so'm</strong></div>
+            <div><span id="lbl-final-cf">Yakuniy Sof Pul Oqimi:</span> <strong id="fa_cf" class="text-white text-sm">0 so'm</strong></div>
+            <div id="fa_verdict" class="p-3 rounded-lg font-bold">Hisoblanmoqda...</div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 4-MODUL: OPTIMAL ZAXIRA -->
-    <section id="view-eoq" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-6 hidden">
-      <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+    <section id="view-eoq" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
         <div>
-          <span class="text-xs font-black uppercase px-3 py-1 rounded bg-indigo-950 text-indigo-400 border border-indigo-800 font-mono">4-MODUL: TA'MINOT LOGISTIKASI</span>
-          <h2 class="text-xl lg:text-2xl font-black text-white mt-2" id="m4-h-title">Optimal Buyurtma Hajmi va Zaxiralar Boshqaruvi (EOQ)</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m4-h-desc">Parametrlarni o'zgartiring — optimal buyurtma partiyasi va xarajatlar balansi avtomatik hisoblanadi.</p>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-400 border border-indigo-800">4-MODUL: TA'MINOT LOGISTIKASI</span>
+          <h2 class="text-lg font-black text-white mt-1" id="m4-h-title">Iqtisodiy Jihatdan Optimal Buyurtma Hajmi va Zaxiralar Boshqaruvi</h2>
+          <p class="text-xs text-slate-400" id="m4-h-desc">Parametrlarni o'zgartiring — optimal buyurtma partiyasi va xarajatlar balansi avtomatik hisoblanadi.</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="openResourceModal('eoq', 'video')" class="text-xs font-bold text-amber-400 border border-amber-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
-          <button onclick="openResourceModal('eoq', 'guide')" class="text-xs font-bold text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
+          <button onclick="openResourceModal('eoq', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
+          <button onclick="openResourceModal('eoq', 'guide')" class="text-xs text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
           <div>
             <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-d">Yillik xomashyo talabi (Birlikda):</label>
-            <input type="number" id="c_eoq_d" value="24000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono focus:border-indigo-500 focus:outline-none">
+            <input type="number" id="c_eoq_d" value="24000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-s">Bitta buyurtmani yetkazish xarajati (so'm):</label>
-            <input type="number" id="c_eoq_s" value="250000" min="50000" step="25000" oninput="runEOQAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono focus:border-indigo-500 focus:outline-none">
+            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-s">Bitta buyurtmani rasmiylashtirish va yetkazish xarajati (so'm):</label>
+            <input type="number" id="c_eoq_s" value="250000" min="50000" step="25000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-h">1 birlik tovarning yillik saqlash xarajati (so'm):</label>
-            <input type="number" id="c_eoq_h" value="12000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono focus:border-indigo-500 focus:outline-none">
+            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-h">1 birlik tovarning omborda yillik saqlash xarajati (so'm):</label>
+            <input type="number" id="c_eoq_h" value="12000" min="1000" step="1000" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-l">Yetkazib berish muddati (Kun):</label>
-            <input type="number" id="c_eoq_l" value="5" min="1" max="30" oninput="runEOQAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono focus:border-indigo-500 focus:outline-none">
+            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m4-l">Yetkazib berish vaqti (Kun):</label>
+            <input type="number" id="c_eoq_l" value="5" min="1" max="30" oninput="runEOQAction()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold focus:border-indigo-500 focus:outline-none">
           </div>
         </div>
         
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 flex flex-col justify-between space-y-4">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col justify-between space-y-4 text-xs">
           <div>
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
-              <h4 class="font-bold text-white text-base" id="lbl-eoq-math-h">Zaxiralar Matematik Xulosasi</h4>
-              <span class="px-2.5 py-1 rounded bg-indigo-950 text-indigo-300 text-xs font-bold border border-indigo-800 font-mono">Jonli hisob</span>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <h4 class="font-bold text-white text-sm" id="lbl-eoq-math-h">Zaxiralar Matematik Xulosasi</h4>
+              <span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 text-[10px] font-bold border border-indigo-800">Jonli hisob</span>
             </div>
-            <div class="space-y-3">
-              <div class="flex justify-between"><span id="lbl-eoq-res-val">Optimal buyurtma hajmi:</span><strong id="eoq_val" class="text-emerald-400 font-mono text-base">1,000 dona</strong></div>
-              <div class="flex justify-between"><span id="lbl-eoq-res-ord">Yillik buyurtmalar soni:</span><strong id="eoq_orders" class="text-white font-mono">24.0 marta</strong></div>
-              <div class="flex justify-between"><span id="lbl-eoq-res-safe">Kafolatlangan xavfsizlik zaxirasi:</span><strong id="eoq_safety" class="text-indigo-400 font-mono">48 dona</strong></div>
-              <div class="flex justify-between"><span id="lbl-eoq-res-rop">Qayta buyurtma berish nuqtasi:</span><strong id="eoq_rop" class="text-amber-400 font-mono">377 dona</strong></div>
-              <div class="flex justify-between border-t border-slate-800 pt-3"><span id="lbl-eoq-res-cost">Yillik saqlash xarajati:</span><strong id="eoq_cost" class="text-emerald-300 font-mono text-base">12.0 mln so'm</strong></div>
+            <div class="space-y-2.5">
+              <div class="flex justify-between"><span id="lbl-eoq-res-val">Optimal buyurtma hajmi:</span><strong id="eoq_val" class="text-emerald-400 text-sm">1,000 dona</strong></div>
+              <div class="flex justify-between"><span id="lbl-eoq-res-ord">Yillik buyurtmalar chastotasi:</span><strong id="eoq_orders" class="text-white">24.0 marta</strong></div>
+              <div class="flex justify-between"><span id="lbl-eoq-res-safe">Kafolatlangan xavfsizlik zaxirasi:</span><strong id="eoq_safety" class="text-indigo-400">48 dona</strong></div>
+              <div class="flex justify-between"><span id="lbl-eoq-res-rop">Qayta buyurtma berish nuqtasi:</span><strong id="eoq_rop" class="text-amber-400">377 dona</strong></div>
+              <div class="flex justify-between border-t border-slate-800 pt-2"><span id="lbl-eoq-res-cost">Zaxiralarni saqlashning yillik jami xarajati:</span><strong id="eoq_cost" class="text-emerald-300 text-sm">12.0 mln so'm</strong></div>
             </div>
           </div>
-          <div class="h-40 flex flex-col items-center">
-            <span class="text-xs text-slate-400 mb-2 font-semibold" id="lbl-eoq-chart-h">Buyurtma va Saqlash Xarajatlari Balansi</span>
+          <div class="h-32 flex flex-col items-center">
+            <span class="text-[10px] text-slate-400 mb-1" id="lbl-eoq-chart-h">Buyurtma va Saqlash Xarajatlari Balansi</span>
             <canvas id="eoqChart"></canvas>
           </div>
         </div>
@@ -439,133 +455,118 @@
     </section>
 
     <!-- 5-MODUL: DINAMIK NARX -->
-    <section id="view-pricing" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-6 hidden">
-      <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+    <section id="view-pricing" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
         <div>
-          <span class="text-xs font-black uppercase px-3 py-1 rounded bg-teal-950 text-teal-400 border border-teal-800 font-mono">5-MODUL: NARX STRATEGIYASI</span>
-          <h2 class="text-xl lg:text-2xl font-black text-white mt-2" id="m5-h-title">Talabning Narx Elastikligi Asosida Dinamik Narx Belgilash</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m5-h-desc">Narx o'zgarishi darajasi va talab reaksiyasining sof marjaga ta'siri.</p>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-teal-950 text-teal-400 border border-teal-800">5-MODUL: NARX STRATEGIYASI</span>
+          <h2 class="text-lg font-black text-white mt-1" id="m5-h-title">Talabning Narx Elastikligi Asosida Dinamik Narx Belgilash</h2>
+          <p class="text-xs text-slate-400" id="m5-h-desc">Narx o'zgarishi darajasi va talab reaksiyasining sof marjaga ta'siri.</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="openResourceModal('pricing', 'video')" class="text-xs font-bold text-amber-400 border border-amber-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
-          <button onclick="openResourceModal('pricing', 'guide')" class="text-xs font-bold text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
+          <button onclick="openResourceModal('pricing', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
+          <button onclick="openResourceModal('pricing', 'guide')" class="text-xs text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-5">
-          <div>
-            <div class="flex justify-between mb-1.5"><span id="lbl-m5-change">Baza narxining o'zgarishi (%):</span> <span id="v_pr_change" class="text-emerald-400 font-bold font-mono">+10%</span></div>
-            <input type="range" id="c_pr_change" min="-30" max="30" value="10" oninput="document.getElementById('v_pr_change').innerText=(this.value>0?'+':'')+this.value+'%'; runPricingAction()" class="w-full accent-emerald-500">
-          </div>
-          <div>
-            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m5-ed">Talab elastikligi koeffitsiyenti (Ed):</label>
-            <input type="number" step="0.1" id="c_pr_ed" value="-1.6" oninput="runPricingAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono">
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div><span id="lbl-m5-change">Baza narxining o'zgarishi (%):</span> <span id="v_pr_change" class="text-emerald-400 font-bold">+10%</span><input type="range" id="c_pr_change" min="-30" max="30" value="10" oninput="document.getElementById('v_pr_change').innerText=(this.value>0?'+':'')+this.value+'%'; runPricingAction()" class="w-full accent-emerald-500"></div>
+          <div><span id="lbl-m5-ed">Talab elastikligi koeffitsiyenti (Ed):</span> <input type="number" step="0.1" id="c_pr_ed" value="-1.6" oninput="runPricingAction()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold"></div>
         </div>
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
-          <div class="flex justify-between"><span id="lbl-m5-res-p">Yangi hisoblangan sotuv narxi:</span> <strong id="pr_price" class="text-emerald-400 font-mono text-base">0 so'm</strong></div>
-          <div class="flex justify-between"><span id="lbl-m5-res-v">Prognoz qilinayotgan sotuv hajmi:</span> <strong id="pr_vol" class="text-white font-mono text-base">0 dona</strong></div>
-          <div class="flex justify-between border-t border-slate-800 pt-3"><span id="lbl-m5-res-prof">Sof Foyda O'zgarishi:</span> <strong id="pr_profit" class="font-mono text-lg">0 so'm</strong></div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div><span id="lbl-m5-res-p">Yangi hisoblangan sotuv narxi:</span> <strong id="pr_price" class="text-emerald-400">0 so'm</strong></div>
+          <div><span id="lbl-m5-res-v">Prognoz qilinayotgan sotuv hajmi:</span> <strong id="pr_vol" class="text-white">0 dona</strong></div>
+          <div><span id="lbl-m5-res-prof">Sof Foyda O'zgarishi Dinamikasi:</span> <strong id="pr_profit" class="text-sm">0 so'm</strong></div>
         </div>
       </div>
     </section>
 
     <!-- 6-MODUL: IQTISODIY XAVFSIZLIK -->
-    <section id="view-security" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-6 hidden">
-      <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+    <section id="view-security" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5 hidden">
+      <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
         <div>
-          <span class="text-xs font-black uppercase px-3 py-1 rounded bg-amber-950 text-amber-400 border border-amber-800 font-mono">6-MODUL: IQTISODIY XAVFSIZLIK</span>
-          <h2 class="text-xl lg:text-2xl font-black text-white mt-2" id="m6-h-title">Iqtisodiy Xavfsizlik & Moliyaviy Barqarorlik Stress-Testi</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m6-h-desc">Valyuta kursi devalvatsiyasi va bojxona to'siqlari sharoitida korxona barqarorlik ko'rsatkichi.</p>
+          <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">6-MODUL: IQTISODIY XAVFSIZLIK</span>
+          <h2 class="text-lg font-black text-white mt-1" id="m6-h-title">Iqtisodiy Xavfsizlik & Moliyaviy Barqarorlik Stress-Testi</h2>
+          <p class="text-xs text-slate-400" id="m6-h-desc">Valyuta kursi devalvatsiyasi va bojxona to'siqlari sharoitida korxona barqarorlik ko'rsatkichi.</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="openResourceModal('security', 'video')" class="text-xs font-bold text-amber-400 border border-amber-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
-          <button onclick="openResourceModal('security', 'guide')" class="text-xs font-bold text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
+          <button onclick="openResourceModal('security', 'video')" class="text-xs text-amber-400 font-bold border border-amber-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-play mr-1"></i> Video</button>
+          <button onclick="openResourceModal('security', 'guide')" class="text-xs text-emerald-400 font-bold border border-emerald-500/40 px-2.5 py-1 rounded-xl bg-slate-950"><i class="fa-solid fa-file-pdf mr-1"></i> Qo'llanma</button>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-4">
-          <div>
-            <div class="flex justify-between mb-1.5"><span id="lbl-m6-fx">Milliy valyuta devalvatsiyasi (%):</span> <span id="v_sec_fx" class="text-amber-400 font-bold font-mono">20%</span></div>
-            <input type="range" id="c_sec_fx" min="0" max="50" value="20" oninput="document.getElementById('v_sec_fx').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500">
-          </div>
-          <div>
-            <div class="flex justify-between mb-1.5"><span id="lbl-m6-tax">Import bojxona boji stavkasi (%):</span> <span id="v_sec_tax" class="text-amber-400 font-bold font-mono">15%</span></div>
-            <input type="range" id="c_sec_tax" min="0" max="30" value="15" oninput="document.getElementById('v_sec_tax').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500">
-          </div>
-          <div>
-            <label class="block font-semibold mb-1 text-slate-300" id="lbl-m6-fund">Favqulodda zaxira va komplayens fondi:</label>
-            <input type="number" id="c_sec_fund" value="50000000" oninput="runSecurityAction()" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold font-mono">
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div><span id="lbl-m6-fx">Milliy valyuta devalvatsiyasi kutilmasi (%):</span> <span id="v_sec_fx" class="text-amber-400 font-bold">20%</span><input type="range" id="c_sec_fx" min="0" max="50" value="20" oninput="document.getElementById('v_sec_fx').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500"></div>
+          <div><span id="lbl-m6-tax">Import bojxona boji stavkasi (%):</span> <span id="v_sec_tax" class="text-amber-400 font-bold">15%</span><input type="range" id="c_sec_tax" min="0" max="30" value="15" oninput="document.getElementById('v_sec_tax').innerText=this.value+'%'; runSecurityAction()" class="w-full accent-amber-500"></div>
+          <div><span id="lbl-m6-fund">Favqulodda zaxira va komplayens fondi:</span> <input type="number" id="c_sec_fund" value="50000000" oninput="runSecurityAction()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-white font-bold"></div>
         </div>
-        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
-          <div class="space-y-3">
-            <div class="flex justify-between"><span id="lbl-m6-risk">Jami Moliyaviy Xavf Yuklamasi:</span> <strong id="sec_risk" class="text-red-400 font-mono text-base">0 so'm</strong></div>
-            <div class="flex justify-between"><span id="lbl-m6-score">Chidamlilik va Omon Qolish Indeksi:</span> <strong id="sec_score" class="text-lg font-black font-mono">0 / 100</strong></div>
-          </div>
-          <div id="sec_status" class="p-3.5 rounded-xl font-bold text-center">Baho kutilmoqda...</div>
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div><span id="lbl-m6-risk">Kutilayotgan Jami Moliyaviy Xavf Yuklamasi:</span> <strong id="sec_risk" class="text-red-400">0 so'm</strong></div>
+          <div><span id="lbl-m6-score">Korxonaning Chidamlilik va Omon Qolish Indeksi:</span> <strong id="sec_score" class="text-sm font-black">0 / 100</strong></div>
+          <div id="sec_status" class="p-3 rounded-lg font-bold">Baho kutilmoqda...</div>
         </div>
       </div>
     </section>
 
-    <!-- ================= 7. BOSHQARUV KENGASHI ================= -->
+    <!-- ================= 7. BOSHQARUV KENGASHI (BOARD PITCH) ================= -->
     <section id="view-board" class="space-y-6 hidden">
-      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/40 p-6 lg:p-8 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
+      <div class="bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border-2 border-amber-500/40 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-2xl">
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded bg-amber-500 text-slate-950 font-mono">BOSHQARUV KENGASHI</span>
-            <button onclick="openResourceModal('board', 'video')" class="text-xs font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-3 py-1 rounded-full border border-amber-500/40 transition">
-              <i class="fa-solid fa-circle-play mr-1.5"></i> <span id="btn-v-board">Taqdimot Darsi</span>
+            <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-500 text-slate-950 font-bold">BOSHQARUV KENGASHI</span>
+            <button onclick="openResourceModal('board', 'video')" class="text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-amber-500/40">
+              <i class="fa-solid fa-circle-play mr-1"></i> <span id="btn-v-board">Taqdimot Darsi</span>
             </button>
-            <button onclick="openResourceModal('board', 'guide')" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 bg-slate-950 px-3 py-1 rounded-full border border-emerald-500/40 transition">
-              <i class="fa-solid fa-file-pdf mr-1.5"></i> <span id="btn-g-board">Kengash Qo'llanmasi</span>
+            <button onclick="openResourceModal('board', 'guide')" class="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+              <i class="fa-solid fa-file-pdf mr-1"></i> <span id="btn-g-board">Kengash Qo'llanmasi</span>
             </button>
           </div>
-          <h2 class="text-2xl font-black text-white mt-2" id="m7-h-title">Aksiyadorlar va Boshqaruv Kengashiga Strategik Taqdimot</h2>
-          <p class="text-sm text-slate-300 mt-1" id="m7-h-desc">Oldingi 6 ta modul qarorlari sintezi, korxona bozor kapitallashuvi va mustaqil direktorlar retsenziyalari.</p>
+          <h2 class="text-xl font-black text-white mt-1" id="m7-h-title">Aksiyadorlar va Boshqaruv Kengashiga Strategik Taqdimot</h2>
+          <p class="text-xs text-slate-300" id="m7-h-desc">Oldingi 6 ta modul qarorlari sintezi, korxona bozor kapitallashuvi va mustaqil direktorlar retsenziyalari.</p>
         </div>
         <div class="text-right">
-          <button onclick="runBoardEvaluationAction()" class="px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-sm shadow-xl transition transform hover:scale-105">
-            <i class="fa-solid fa-arrows-rotate mr-2"></i> <span id="btn-board-refresh">Kengash Bahosini Yangilash</span>
+          <button onclick="runBoardEvaluationAction()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-xs shadow-xl transition transform hover:scale-105">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i> <span id="btn-board-refresh">Kengash Bahosini Yangilash</span>
           </button>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+      <!-- Kengash Qarori Xulosasi -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div class="text-slate-400" id="lbl-b-ebitda">Yillik Operatsion Foyda (EBITDA)</div>
-          <div id="board-ebitda" class="text-2xl font-black text-emerald-400 font-mono mt-1.5">Yuklanmoqda...</div>
+          <div id="board-ebitda" class="text-xl font-black text-emerald-400 mt-1">Yuklanmoqda...</div>
         </div>
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div class="text-slate-400" id="lbl-b-val">Korxona Bozor Kapitallashuvi</div>
-          <div id="board-valuation" class="text-2xl font-black text-white font-mono mt-1.5">Yuklanmoqda...</div>
+          <div id="board-valuation" class="text-xl font-black text-white mt-1">Yuklanmoqda...</div>
         </div>
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div class="text-slate-400" id="lbl-b-score">Kengashning Boshqaruv Bahosi</div>
-          <div id="board-score" class="text-2xl font-black text-amber-400 font-mono mt-1.5">-- / 100</div>
+          <div id="board-score" class="text-xl font-black text-amber-400 mt-1">-- / 100</div>
         </div>
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div class="text-slate-400" id="lbl-b-verdict">Yakuniy Kengash Qarori</div>
-          <div id="board-verdict" class="text-sm font-black text-slate-200 mt-2 uppercase">Kutilmoqda...</div>
+          <div id="board-verdict" class="text-xs font-black text-slate-200 mt-1 uppercase">Kutilmoqda...</div>
         </div>
       </div>
 
+      <!-- 3 ta C-Level Direktor Retsenziyasi va 3 Yillik Prognoz Grafigi -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wide flex items-center">
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4">
+          <h3 class="text-xs font-bold text-white uppercase flex items-center">
             <i class="fa-solid fa-user-tie text-amber-400 mr-2"></i> <span id="lbl-c-level-h">Mustaqil C-Level Direktorlar Kengashi Xulosasi</span>
           </h3>
-          <div id="board-reviews-container" class="space-y-3.5"></div>
+          <div id="board-reviews-container" class="space-y-3"></div>
         </div>
 
-        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5 flex flex-col justify-between">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wide flex items-center">
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 p-5 rounded-2xl space-y-4 flex flex-col justify-between">
+          <h3 class="text-xs font-bold text-white uppercase flex items-center">
             <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i> <span id="lbl-chart-val-h">3 Yillik Kapitallashuv Dinamikasi</span>
           </h3>
-          <div class="h-64 flex justify-center">
+          <div class="h-60 flex justify-center">
             <canvas id="boardValuationChart"></canvas>
           </div>
-          <button onclick="window.print()" class="w-full py-3 bg-slate-950 border border-amber-500/50 hover:bg-slate-900 text-amber-300 font-bold rounded-xl text-sm transition">
+          <button onclick="window.print()" class="w-full py-2.5 bg-slate-950 border border-amber-500/50 hover:bg-slate-900 text-amber-300 font-bold rounded-xl text-xs transition">
             <i class="fa-solid fa-file-invoice-dollar mr-2"></i> <span id="btn-print-deck">Strategik Memorandumni Chop Etish (PDF)</span>
           </button>
         </div>
@@ -573,31 +574,31 @@
 
       <!-- Chop etiluvchi Maxsus Executive Deck -->
       <div id="printable-executive-deck" class="hidden">
-        <div class="p-10 bg-white text-slate-900 space-y-5">
-          <div class="border-b-2 border-slate-900 pb-4 flex justify-between items-center">
+        <div class="p-8 bg-white text-slate-900 space-y-4">
+          <div class="border-b-2 border-slate-900 pb-3 flex justify-between items-center">
             <div>
-              <h2 class="text-2xl font-black">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</h2>
-              <p class="text-sm text-slate-600">BIZLAB Virtual Biznes Laboratoriyasi — Boshqaruv Kengashi Memorandumi</p>
+              <h2 class="text-xl font-black">TOSHKENT DAVLAT IQTISODIYOT UNIVERSITETI</h2>
+              <p class="text-xs text-slate-600">BIZLAB Virtual Biznes Laboratoriyasi — Boshqaruv Kengashi Memorandumi</p>
             </div>
-            <div class="text-right text-sm">
+            <div class="text-right text-xs">
               <strong>Sana:</strong> 2026-yil, Bugun<br>
               <strong>Boshqaruvchi:</strong> Mirzarakhim B.
             </div>
           </div>
-          <h3 class="text-xl font-bold text-slate-800">Ijroiya Strategik Hisobot (Executive Summary)</h3>
-          <p class="text-sm leading-relaxed text-slate-700">
+          <h3 class="text-lg font-bold text-slate-800">Ijroiya Strategik Hisobot (Executive Summary)</h3>
+          <p class="text-xs leading-relaxed text-slate-700">
             Mazkur hisobot talaba tomonidan 6 ta asosiy biznes modulida qabul qilingan qarorlarining sintezini aks ettiradi.
           </p>
-          <div class="grid grid-cols-3 gap-4 border border-slate-300 p-4 rounded-xl text-sm">
+          <div class="grid grid-cols-3 gap-3 border border-slate-300 p-3 rounded text-xs">
             <div><strong>Yillik EBITDA:</strong> <span id="print-ebitda">0 so'm</span></div>
             <div><strong>Kapitallashuv:</strong> <span id="print-valuation">0 so'm</span></div>
             <div><strong>Kengash Bahosi:</strong> <span id="print-score">-- / 100</span></div>
           </div>
-          <div class="text-sm space-y-2.5 pt-3">
+          <div class="text-xs space-y-2 pt-2">
             <h4 class="font-bold uppercase border-b pb-1">Direktorlar Xulosasi:</h4>
-            <div id="print-reviews-box" class="space-y-1.5"></div>
+            <div id="print-reviews-box" class="space-y-1"></div>
           </div>
-          <div class="pt-10 flex justify-between text-sm font-bold border-t">
+          <div class="pt-8 flex justify-between text-xs font-bold border-t">
             <div>Ilmiy Rahbar: _____________________</div>
             <div>Kafedra Mudiri: _____________________</div>
           </div>
@@ -611,53 +612,53 @@
   <div id="resource-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 id="res-modal-title" class="text-base font-bold text-white flex items-center gap-2"></h3>
+        <h3 id="res-modal-title" class="text-sm font-bold text-white flex items-center gap-2"></h3>
         <button onclick="closeResourceModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div id="res-modal-body" class="text-sm text-slate-300 space-y-3 leading-relaxed"></div>
-      <div class="flex justify-end pt-3 border-t border-slate-800">
-        <button onclick="closeResourceModal()" class="px-6 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-bold hover:bg-slate-700 transition" id="btn-close-res">Yopish</button>
+      <div id="res-modal-body" class="text-xs text-slate-300 space-y-3"></div>
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button onclick="closeResourceModal()" class="px-5 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold hover:bg-slate-700" id="btn-close-res">Yopish</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: CASE STUDY HISOBLAGICHI -->
   <div id="case-solve-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto shadow-2xl">
-      <div class="flex justify-between items-start border-b border-slate-800 pb-3.5">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div class="flex justify-between items-start border-b border-slate-800 pb-3">
         <div>
-          <span id="cs-modal-lvl" class="text-xs font-mono px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">DARAJA</span>
-          <h3 id="cs-modal-title" class="text-base font-bold text-white mt-1.5">Keys Nomi</h3>
+          <span id="cs-modal-lvl" class="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">DARAJA</span>
+          <h3 id="cs-modal-title" class="text-sm font-bold text-white mt-1">Keys Nomi</h3>
         </div>
         <button onclick="closeCaseSolveModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="space-y-4 text-sm">
-        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
-          <strong class="text-amber-400 block text-xs uppercase tracking-wide font-mono" id="lbl-cs-sit-h">Bozor Vaziyati:</strong>
+      <div class="space-y-3 text-xs">
+        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800">
+          <strong class="text-amber-400 block mb-1 text-[11px] uppercase" id="lbl-cs-sit-h">Bozor Vaziyati:</strong>
           <p id="cs-modal-sit" class="text-slate-300 leading-relaxed"></p>
         </div>
-        <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-3">
-          <strong class="text-emerald-400 block text-xs uppercase tracking-wide font-mono" id="lbl-cs-task-h">Iqtisodiy Masala & Hisob-kitob:</strong>
-          <p id="cs-modal-prompt" class="text-slate-300 leading-relaxed"></p>
-          <div id="cs-modal-inputs" class="space-y-2.5"></div>
-          <button onclick="checkCaseSolution()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition shadow-lg" id="btn-cs-verify">
+        <div class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 space-y-2">
+          <strong class="text-emerald-400 block text-[11px] uppercase" id="lbl-cs-task-h">Iqtisodiy Masala & Hisob-kitob:</strong>
+          <p id="cs-modal-prompt" class="text-slate-300"></p>
+          <div id="cs-modal-inputs" class="space-y-2"></div>
+          <button onclick="checkCaseSolution()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition" id="btn-cs-verify">
             Tekshirish va Baholash
           </button>
         </div>
-        <div id="cs-modal-res" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 hidden space-y-1.5">
-          <div class="flex justify-between font-bold text-sm">
+        <div id="cs-modal-res" class="p-3 rounded-2xl bg-slate-950 border border-slate-800 hidden space-y-1">
+          <div class="flex justify-between font-bold">
             <span class="text-slate-400" id="lbl-cs-verdict">Natija:</span>
-            <span id="cs-modal-score" class="font-mono text-base"></span>
+            <span id="cs-modal-score" class="font-mono"></span>
           </div>
-          <p id="cs-modal-feedback" class="text-slate-300 text-sm leading-relaxed"></p>
+          <p id="cs-modal-feedback" class="text-slate-300 text-[11px]"></p>
         </div>
       </div>
-      <div class="flex justify-end pt-3 border-t border-slate-800">
-        <button onclick="closeCaseSolveModal()" class="px-6 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-bold hover:bg-slate-700 transition" id="btn-close-cs">Yopish</button>
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button onclick="closeCaseSolveModal()" class="px-5 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold hover:bg-slate-700" id="btn-close-cs">Yopish</button>
       </div>
     </div>
   </div>
@@ -691,7 +692,7 @@
     // SOF O'ZBEKCHA VA INGLIZCHA IQTISODIY ATAMALAR BAZASI
     const i18n = {
       uz: {
-        hdr_sub: "Toshkent Davlat Iqtisodiyot Universiteti — 8 Kompetensiyali Virtual Laboratoriya",
+        hdr_sub: "TDIU 8 Kompetensiyali Virtual Laboratoriya & Boshqaruv Markazi",
         t_cases: "1-Qism: 8 Kompetensiya",
         t_battle: "1. Bozor Jangi",
         t_lab: "2. Milliy Keyslar",
@@ -739,21 +740,21 @@
         m3_staff: "Shtatlar sonini optimallashtirish:",
         m3_inv: "Sekin aylanuvchi tovar qoldiqlarini naqdlashtirish:",
         audit_summary: "Moliyaviy Audit Xulosasi",
-        init_gap: "Dastlabki Kassa Defitsiti:",
-        saved_mon: "Oylik tejalgan xarajatlar:",
+        init_gap: "Dastlabki Kassa Uzilishi (Defitsit):",
+        saved_mon: "Oylik tejalgan xarajatlar miqdori:",
         final_cf: "Yakuniy Sof Pul Oqimi:",
-        m4_h_title: "Optimal Buyurtma Hajmi va Zaxiralar Boshqaruvi (EOQ)",
+        m4_h_title: "Iqtisodiy Jihatdan Optimal Buyurtma Hajmi va Zaxiralar Boshqaruvi",
         m4_h_desc: "Parametrlarni o'zgartiring — optimal buyurtma partiyasi va xarajatlar balansi avtomatik hisoblanadi.",
         m4_d: "Yillik xomashyo talabi (Birlikda):",
-        m4_s: "Bitta buyurtmani yetkazish xarajati (so'm):",
-        m4_h: "1 birlik tovarning yillik saqlash xarajati (so'm):",
-        m4_l: "Yetkazib berish muddati (Kun):",
+        m4_s: "Bitta buyurtmani rasmiylashtirish va yetkazish xarajati (so'm):",
+        m4_h: "1 birlik tovarning omborda yillik saqlash xarajati (so'm):",
+        m4_l: "Yetkazib berish vaqti (Kun):",
         eoq_math_h: "Zaxiralar Matematik Xulosasi",
         eoq_res_val: "Optimal buyurtma hajmi:",
-        eoq_res_ord: "Yillik buyurtmalar soni:",
+        eoq_res_ord: "Yillik buyurtmalar chastotasi:",
         eoq_res_safe: "Kafolatlangan xavfsizlik zaxirasi:",
         eoq_res_rop: "Qayta buyurtma berish nuqtasi:",
-        eoq_res_cost: "Yillik saqlash xarajati:",
+        eoq_res_cost: "Zaxiralarni saqlashning yillik jami xarajati:",
         eoq_chart_h: "Buyurtma va Saqlash Xarajatlari Balansi",
         m5_h_title: "Talabning Narx Elastikligi Asosida Dinamik Narx Belgilash",
         m5_h_desc: "Narx o'zgarishi darajasi va talab reaksiyasining sof marjaga ta'siri.",
@@ -761,14 +762,14 @@
         m5_ed: "Talab elastikligi koeffitsiyenti (Ed):",
         m5_res_p: "Yangi hisoblangan sotuv narxi:",
         m5_res_v: "Prognoz qilinayotgan sotuv hajmi:",
-        m5_res_prof: "Sof Foyda O'zgarishi:",
+        m5_res_prof: "Sof Foyda O'zgarishi Dinamikasi:",
         m6_h_title: "Iqtisodiy Xavfsizlik & Moliyaviy Barqarorlik Stress-Testi",
         m6_h_desc: "Valyuta kursi devalvatsiyasi va bojxona to'siqlari sharoitida korxona barqarorlik ko'rsatkichi.",
-        m6_fx: "Milliy valyuta devalvatsiyasi (%):",
+        m6_fx: "Milliy valyuta devalvatsiyasi kutilmasi (%):",
         m6_tax: "Import bojxona boji stavkasi (%):",
         m6_fund: "Favqulodda zaxira va komplayens fondi:",
-        m6_risk: "Jami Moliyaviy Xavf Yuklamasi:",
-        m6_score: "Chidamlilik va Omon Qolish Indeksi:",
+        m6_risk: "Kutilayotgan Jami Moliyaviy Xavf Yuklamasi:",
+        m6_score: "Korxonaning Chidamlilik va Omon Qolish Indeksi:",
         m7_h_title: "Aksiyadorlar va Boshqaruv Kengashiga Strategik Taqdimot",
         m7_h_desc: "Oldingi 6 ta modul qarorlari sintezi, korxona bozor kapitallashuvi va mustaqil direktorlar retsenziyalari.",
         btn_board_refresh: "Kengash Bahosini Yangilash",
@@ -784,7 +785,7 @@
         verdict_lbl: "Natija:"
       },
       en: {
-        hdr_sub: "Tashkent State University of Economics — 8 Competency Virtual Laboratory",
+        hdr_sub: "TSUE 8 Competency Virtual Lab & Executive Decision Suite",
         t_cases: "Part 1: 8 Competencies",
         t_battle: "1. Market Battle",
         t_lab: "2. National Cases",
@@ -857,7 +858,7 @@
         m5_res_prof: "Profit Trajectory Delta:",
         m6_h_title: "Economic Security & Compliance Stress-Testing",
         m6_h_desc: "Enterprise solvency and liquidity resilience amidst FX devaluations and tariff spikes.",
-        m6_fx: "Currency Devaluation Shock (%):",
+        m6_fx: "Currency Devaluation Shock Expectation (%):",
         m6_tax: "Import Customs Surcharge (%):",
         m6_fund: "Emergency Liquidity Reserve Fund:",
         m6_risk: "Total Risk Exposure:",
@@ -878,7 +879,7 @@
       }
     };
 
-    // 8 TA KOMPETENSIYA KEYSLARI (O'ZBEKCHA VA INGLIZCHA TO'LIQ MATNLAR)
+    // 8 TA KOMPETENSIYA KEYSLARI (O'ZBEKCHA LOTINDA TO'LIQ)
     const caseBank = [
       {
         id: 1,
@@ -887,7 +888,7 @@
         evalFocus: { uz: "bozordagi muammo va ehtiyojni topish", en: "uncovering market dislocations & unmet needs" },
         exerciseName: "Opportunity Recognition Challenge",
         sit: {
-          uz: "AgroTech logistikasi: O'zbekiston viloyatlarida yetishtirilgan 300,000 tonna sarxil meva-sabzavotning 28%i sovutkichli transport infratuzilmasi yo'qligi oqibatida nobud bo'lmoqda. Dehqonlar hosilini arzon narxda sotishga yoki nobud qilishga majbur bo'lmoqda.",
+          uz: "AgroTech logistikasi: O'zbekiston viloyatlarida yetishtirilgan 300,000 tonna sarxil meva-sabzavotning 28%i sovutkichli transport infratuzilmasi yo'qligi oqibatida nobud bo'lmoqda. Dehqonlar hosilini arzon narxda sotishga yoki nobud qilishga majbur.",
           en: "Cold-chain Logistics: 28% of 300,000 tons of harvested produce in provincial Uzbekistan spoils due to lack of refrigerated logistics, causing distressed supply."
         },
         prompt: {
@@ -1193,7 +1194,7 @@
         const viewEl = document.getElementById(`view-${k}`);
         const tabEl = document.getElementById(`tab-${k}`);
         if (viewEl) viewEl.classList.add('hidden');
-        if (tabEl) tabEl.className = 'px-3.5 py-2 rounded-lg text-slate-300 hover:text-white transition';
+        if (tabEl) tabEl.className = 'px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white';
       });
 
       const targetView = document.getElementById(`view-${tab}`);
@@ -1201,11 +1202,11 @@
 
       if (tab === 'cases') {
         const tabBtn = document.getElementById('tab-cases');
-        if (tabBtn) tabBtn.className = 'px-3.5 py-2 rounded-lg font-bold bg-amber-500 text-slate-950 shadow';
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg font-black bg-amber-500 text-slate-950 shadow';
         renderCaseList();
       } else {
         const tabBtn = document.getElementById(`tab-${tab}`);
-        if (tabBtn) tabBtn.className = 'px-3.5 py-2 rounded-lg font-bold bg-rose-600 text-white shadow';
+        if (tabBtn) tabBtn.className = 'px-3 py-1.5 rounded-lg font-bold bg-rose-600 text-white shadow';
       }
 
       if (tab === 'lab' && missions.length === 0) loadMissionsData();
@@ -1222,18 +1223,18 @@
       if (!container) return;
       const t = i18n[currentLang];
       container.innerHTML = caseBank.map(c => `
-        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between space-y-4 hover:border-amber-500/50 transition shadow-lg">
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between space-y-3 hover:border-amber-500/50 transition shadow-lg">
           <div>
-            <div class="flex justify-between items-center mb-1.5">
-              <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">${c.compNumber}</span>
-              <span class="text-xs text-slate-400 font-mono text-right font-medium">${c.exerciseName}</span>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 font-bold">${c.compNumber}</span>
+              <span class="text-[9px] text-slate-500 font-mono text-right">${c.exerciseName}</span>
             </div>
-            <h4 class="text-base font-extrabold text-white mt-2">${c.compName[currentLang]}</h4>
-            <div class="text-xs text-emerald-400 font-medium mt-1"><i class="fa-solid fa-bullseye mr-1.5"></i>${c.evalFocus[currentLang]}</div>
-            <p class="text-sm text-slate-300 leading-relaxed mt-2.5 line-clamp-4">${c.sit[currentLang]}</p>
+            <h4 class="text-xs font-black text-white">${c.compName[currentLang]}</h4>
+            <div class="text-[10px] text-emerald-400 font-medium mt-0.5"><i class="fa-solid fa-bullseye mr-1"></i>${c.evalFocus[currentLang]}</div>
+            <p class="text-[11px] text-slate-400 leading-snug mt-2 line-clamp-3">${c.sit[currentLang]}</p>
           </div>
-          <button onclick="openCaseSolveModal(${c.id})" class="w-full py-2.5 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 text-sm font-bold transition flex items-center justify-center gap-2">
-            <span>${t.btn_solve}</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+          <button onclick="openCaseSolveModal(${c.id})" class="w-full py-2 rounded-xl bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-slate-950 text-xs font-bold transition flex items-center justify-center gap-1.5">
+            <span>${t.btn_solve}</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </button>
         </div>
       `).join('');
@@ -1252,8 +1253,8 @@
       const inpsBox = document.getElementById('cs-modal-inputs');
       inpsBox.innerHTML = activeCase.inputs.map(inp => `
         <div>
-          <label class="text-sm text-slate-300 block mb-1.5 font-medium">${inp.label[currentLang]}</label>
-          <input type="number" id="${inp.id}" placeholder="${inp.hint}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white font-mono text-sm focus:border-amber-500 focus:outline-none">
+          <label class="text-[11px] text-slate-400 block mb-1">${inp.label[currentLang]}</label>
+          <input type="number" id="${inp.id}" placeholder="${inp.hint}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-mono text-xs">
         </div>
       `).join('');
 
@@ -1275,11 +1276,11 @@
 
       if (ok) {
         scoreTxt.innerText = currentLang === 'uz' ? "100 / 100 (To'g'ri!)" : "100 / 100 (Correct!)";
-        scoreTxt.className = "font-mono font-bold text-emerald-400 text-base";
+        scoreTxt.className = "font-mono font-bold text-emerald-400";
         fbTxt.innerText = activeCase.success[currentLang];
       } else {
         scoreTxt.innerText = currentLang === 'uz' ? "30 / 100 (Xato hisoblandi)" : "30 / 100 (Incorrect)";
-        scoreTxt.className = "font-mono font-bold text-rose-400 text-base";
+        scoreTxt.className = "font-mono font-bold text-rose-400";
         fbTxt.innerText = activeCase.fail[currentLang];
       }
       resBox.classList.remove('hidden');
@@ -1303,17 +1304,17 @@
           <div class="aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
             <iframe class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video" frameborder="0" allowfullscreen></iframe>
           </div>
-          <p class="text-slate-300 text-sm leading-relaxed mt-2">${res.video[currentLang]}</p>
+          <p class="text-slate-300">${res.video[currentLang]}</p>
         `;
       } else {
         titleEl.innerHTML = `<i class="fa-solid fa-file-pdf text-emerald-400"></i> ${res.title[currentLang]} — Metodik Qo'llanma`;
         bodyEl.innerHTML = `
-          <div class="p-5 bg-slate-950 rounded-xl border border-slate-800 space-y-2.5">
-            <h4 class="font-bold text-white text-base">${currentLang === 'uz' ? 'Akademik Metodik Konspekt:' : 'Executive Methodological Guide:'}</h4>
-            <p class="text-slate-300 text-sm leading-relaxed">${res.guide[currentLang]}</p>
+          <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+            <h4 class="font-bold text-white text-xs">${currentLang === 'uz' ? 'Akademik Metodik Konspekt:' : 'Executive Methodological Guide:'}</h4>
+            <p class="text-slate-300 leading-relaxed">${res.guide[currentLang]}</p>
           </div>
-          <button onclick="window.print()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition">
-            <i class="fa-solid fa-print mr-2"></i> ${currentLang === 'uz' ? 'Qo\'llanmani Chop Etish (PDF)' : 'Print Guide (PDF)'}
+          <button onclick="window.print()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">
+            <i class="fa-solid fa-print mr-1"></i> ${currentLang === 'uz' ? 'Qo\'llanmani Chop Etish (PDF)' : 'Print Guide (PDF)'}
           </button>
         `;
       }
@@ -1340,19 +1341,19 @@
       document.getElementById('res-a-share').innerText = d.team_a.market_share + '%';
       document.getElementById('res-a-orders').innerText = d.team_a.orders.toLocaleString() + (currentLang==='uz'?' ta':' units');
       document.getElementById('res-a-profit').innerText = (d.team_a.net_profit >= 0 ? '+' : '') + (d.team_a.net_profit / 1000000).toFixed(1) + (currentLang==='uz'?' mln so\'m':'m UZS');
-      document.getElementById('res-a-profit').className = d.team_a.net_profit >= 0 ? 'text-emerald-400 font-bold font-mono text-base' : 'text-red-400 font-bold font-mono text-base';
+      document.getElementById('res-a-profit').className = d.team_a.net_profit >= 0 ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold';
 
       document.getElementById('res-b-share').innerText = d.team_b.market_share + '%';
       document.getElementById('res-b-orders').innerText = d.team_b.orders.toLocaleString() + (currentLang==='uz'?' ta':' units');
       document.getElementById('res-b-profit').innerText = (d.team_b.net_profit >= 0 ? '+' : '') + (d.team_b.net_profit / 1000000).toFixed(1) + (currentLang==='uz'?' mln so\'m':'m UZS');
-      document.getElementById('res-b-profit').className = d.team_b.net_profit >= 0 ? 'text-rose-400 font-bold font-mono text-base' : 'text-red-400 font-bold font-mono text-base';
+      document.getElementById('res-b-profit').className = d.team_b.net_profit >= 0 ? 'text-rose-400 font-bold' : 'text-red-400 font-bold';
 
       document.getElementById('duel-analysis-text').innerText = d.analysis;
 
       const badge = document.getElementById('duel-winner-badge');
-      if (d.winner === 'team_a') { badge.className = 'text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-950 border border-emerald-500 text-emerald-300 font-mono'; badge.innerText = currentLang==='uz'?"Uzum Express yutdi!":"Uzum Express Won!"; }
-      else if (d.winner === 'team_b') { badge.className = 'text-xs font-bold px-3 py-1.5 rounded-full bg-rose-950 border border-rose-500 text-rose-300 font-mono'; badge.innerText = currentLang==='uz'?"Yandex yutdi!":"Yandex Won!"; }
-      else { badge.className = 'text-xs font-bold px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 font-mono'; badge.innerText = currentLang==='uz'?"Durang!":"Draw!"; }
+      if (d.winner === 'team_a') { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-emerald-950 border border-emerald-500 text-emerald-300'; badge.innerText = currentLang==='uz'?"Uzum Express yutdi!":"Uzum Express Won!"; }
+      else if (d.winner === 'team_b') { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300'; badge.innerText = currentLang==='uz'?"Yandex yutdi!":"Yandex Won!"; }
+      else { badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-300'; badge.innerText = currentLang==='uz'?"Durang!":"Draw!"; }
 
       treasuryA += d.team_a.net_profit;
       treasuryB += d.team_b.net_profit;
@@ -1397,14 +1398,14 @@
 
       missions.forEach(m => {
         const item = document.createElement('div');
-        item.className = `p-3.5 rounded-xl border cursor-pointer transition ${activeMission && activeMission.id === m.id ? 'bg-emerald-950/60 border-emerald-500' : 'bg-slate-950 hover:bg-slate-900 border-slate-800'}`;
+        item.className = `p-3 rounded-xl border cursor-pointer transition ${activeMission && activeMission.id === m.id ? 'bg-emerald-950/60 border-emerald-500' : 'bg-slate-950 hover:bg-slate-900 border-slate-800'}`;
         item.onclick = () => selectMission(m);
         item.innerHTML = `
           <div class="flex justify-between items-center mb-1">
-            <span class="text-xs font-bold uppercase text-emerald-400">${m.company}</span>
-            <span class="text-xs px-2 py-0.5 rounded bg-slate-900 text-slate-400 font-mono">${m.badge}</span>
+            <span class="text-[10px] font-bold uppercase text-emerald-400">${m.company}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400">${m.badge}</span>
           </div>
-          <h4 class="text-sm font-bold text-white">${m.title}</h4>
+          <h4 class="text-xs font-bold text-white">${m.title}</h4>
         `;
         list.appendChild(item);
       });
@@ -1425,9 +1426,9 @@
       (m.shocks || []).forEach(s => {
         const btn = document.createElement('button');
         btn.id = `shock-btn-${s.id}`;
-        btn.className = 'w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950 hover:border-amber-500/50 text-xs transition';
+        btn.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:border-amber-500/50 text-xs transition';
         btn.onclick = () => toggleShockAction(s);
-        btn.innerHTML = `<div class="font-bold text-amber-300 text-xs">${s.title}</div><div class="text-xs text-slate-400 mt-1">${s.description}</div>`;
+        btn.innerHTML = `<div class="font-bold text-amber-300 text-[11px]">${s.title}</div><div class="text-[10px] text-slate-400 mt-0.5">${s.description}</div>`;
         sContainer.appendChild(btn);
       });
 
@@ -1435,11 +1436,11 @@
       qContainer.innerHTML = '';
       m.quiz.forEach((q, idx) => {
         const qDiv = document.createElement('div');
-        qDiv.className = 'p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-sm space-y-2';
+        qDiv.className = 'p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2';
         qDiv.innerHTML = `<div class="font-bold text-white">${idx + 1}. ${q.question}</div>`;
         q.options.forEach((opt, oIdx) => {
           qDiv.innerHTML += `
-            <label class="flex items-center space-x-2.5 text-slate-300 cursor-pointer text-sm">
+            <label class="flex items-center space-x-2 text-slate-300 cursor-pointer">
               <input type="radio" name="${q.id}" value="${oIdx}" class="accent-indigo-500">
               <span>${opt}</span>
             </label>
@@ -1461,27 +1462,27 @@
       c.innerHTML = '';
       if (type === 'logistics') {
         c.innerHTML = `
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Taqsimot logistika markazlari (Hublar):</span><span id="vc1" class="text-emerald-400 font-bold font-mono">2 ta</span></div><input type="range" id="c_hubs" min="1" max="5" value="2" oninput="document.getElementById('vc1').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><label class="block font-semibold mb-1 text-sm">Kuryerlar modeli:</label><select id="c_courier" onchange="runClassicSim()" class="w-full p-2.5 bg-slate-900 border border-slate-800 rounded-lg text-sm text-white"><option value="ichki_shtat">O'z kuryerlari</option><option value="autsorsing">Tashqi autsorsing</option></select></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Marketing va mijoz oqimi byudjeti:</span><span id="vc2" class="text-emerald-400 font-bold font-mono">15,000,000 so'm</span></div><input type="range" id="c_mkt" min="5000000" max="40000000" step="2500000" value="15000000" oninput="document.getElementById('vc2').innerText=parseInt(this.value).toLocaleString()+' so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Taqsimot logistika markazlari (Hublar):</span><span id="vc1" class="text-emerald-400 font-bold">2 ta</span></div><input type="range" id="c_hubs" min="1" max="5" value="2" oninput="document.getElementById('vc1').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><label class="block font-semibold mb-1">Kuryerlar modeli:</label><select id="c_courier" onchange="runClassicSim()" class="w-full p-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white"><option value="ichki_shtat">O'z kuryerlari</option><option value="autsorsing">Tashqi autsorsing</option></select></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Marketing va mijoz oqimi byudjeti:</span><span id="vc2" class="text-emerald-400 font-bold">15,000,000 so'm</span></div><input type="range" id="c_mkt" min="5000000" max="40000000" step="2500000" value="15000000" oninput="document.getElementById('vc2').innerText=parseInt(this.value).toLocaleString()+' so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
         `;
       } else if (type === 'retail') {
         c.innerHTML = `
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Chakana narx ustamasi (Marja %):</span><span id="vc1" class="text-emerald-400 font-bold font-mono">22%</span></div><input type="range" id="c_markup" min="10" max="40" value="22" oninput="document.getElementById('vc1').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Raqobatbardosh chegirma:</span><span id="vc2" class="text-emerald-400 font-bold font-mono">5%</span></div><input type="range" id="c_discount" min="0" max="25" value="5" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Tarmoqdagi do'konlar soni:</span><span id="vc3" class="text-emerald-400 font-bold font-mono">25 ta</span></div><input type="range" id="c_stores" min="10" max="60" value="25" oninput="document.getElementById('vc3').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Chakana narx ustamasi (Marja %):</span><span id="vc1" class="text-emerald-400 font-bold">22%</span></div><input type="range" id="c_markup" min="10" max="40" value="22" oninput="document.getElementById('vc1').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Raqobatbardosh chegirma:</span><span id="vc2" class="text-emerald-400 font-bold">5%</span></div><input type="range" id="c_discount" min="0" max="25" value="5" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Tarmoqdagi do'konlar soni:</span><span id="vc3" class="text-emerald-400 font-bold">25 ta</span></div><input type="range" id="c_stores" min="10" max="60" value="25" oninput="document.getElementById('vc3').innerText=this.value+' ta'; runClassicSim()" class="w-full accent-emerald-500"></div>
         `;
       } else if (type === 'automotive') {
         c.innerHTML = `
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Oylik ishlab chiqarish quvvati:</span><span id="vc1" class="text-emerald-400 font-bold font-mono">1,200 dona</span></div><input type="range" id="c_vol" min="400" max="3000" step="100" value="1200" oninput="document.getElementById('vc1').innerText=parseInt(this.value).toLocaleString()+' dona'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Tashqi eksport ulushi:</span><span id="vc2" class="text-emerald-400 font-bold font-mono">30%</span></div><input type="range" id="c_exp" min="10" max="70" value="30" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Ichki mahalliylashtirish darajasi:</span><span id="vc3" class="text-emerald-400 font-bold font-mono">45%</span></div><input type="range" id="c_loc" min="20" max="75" value="45" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Oylik ishlab chiqarish quvvati:</span><span id="vc1" class="text-emerald-400 font-bold">1,200 dona</span></div><input type="range" id="c_vol" min="400" max="3000" step="100" value="1200" oninput="document.getElementById('vc1').innerText=parseInt(this.value).toLocaleString()+' dona'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Tashqi eksport ulushi:</span><span id="vc2" class="text-emerald-400 font-bold">30%</span></div><input type="range" id="c_exp" min="10" max="70" value="30" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Ichki mahalliylashtirish darajasi:</span><span id="vc3" class="text-emerald-400 font-bold">45%</span></div><input type="range" id="c_loc" min="20" max="75" value="45" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
         `;
       } else {
         c.innerHTML = `
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Boshlang'ich kapital xarajatlar:</span><span id="vc1" class="text-emerald-400 font-bold font-mono">50 mlrd so'm</span></div><input type="range" id="c_capex" min="20" max="100" step="5" value="50" oninput="document.getElementById('vc1').innerText=this.value+' mlrd so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>O'rtacha tortilgan kapital qiymati:</span><span id="vc2" class="text-emerald-400 font-bold font-mono">16%</span></div><input type="range" id="c_wacc" min="10" max="26" value="16" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
-          <div><div class="flex justify-between font-semibold mb-1 text-sm"><span>Operatsion pul oqimi o'sishi:</span><span id="vc3" class="text-emerald-400 font-bold font-mono">15%</span></div><input type="range" id="c_growth" min="5" max="30" value="15" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Boshlang'ich kapital xarajatlar:</span><span id="vc1" class="text-emerald-400 font-bold">50 mlrd so'm</span></div><input type="range" id="c_capex" min="20" max="100" step="5" value="50" oninput="document.getElementById('vc1').innerText=this.value+' mlrd so\'m'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>O'rtacha tortilgan kapital qiymati:</span><span id="vc2" class="text-emerald-400 font-bold">16%</span></div><input type="range" id="c_wacc" min="10" max="26" value="16" oninput="document.getElementById('vc2').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
+          <div><div class="flex justify-between font-semibold mb-1"><span>Operatsion pul oqimi o'sishi:</span><span id="vc3" class="text-emerald-400 font-bold">15%</span></div><input type="range" id="c_growth" min="5" max="30" value="15" oninput="document.getElementById('vc3').innerText=this.value+'%'; runClassicSim()" class="w-full accent-emerald-500"></div>
         `;
       }
     }
@@ -1490,12 +1491,12 @@
       const alertBox = document.getElementById('lab-shock-alert');
       if (activeShock === shock.id) {
         activeShock = null;
-        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
+        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
         alertBox.classList.add('hidden');
       } else {
         activeShock = shock.id;
-        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-3 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
-        document.getElementById(`shock-btn-${shock.id}`).className = 'w-full text-left p-3 rounded-xl border border-red-500 bg-red-950/60 text-xs transition shadow-lg';
+        document.querySelectorAll('#shocks-container button').forEach(b => b.className = 'w-full text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950 text-xs transition');
+        document.getElementById(`shock-btn-${shock.id}`).className = 'w-full text-left p-2.5 rounded-xl border border-red-500 bg-red-950/60 text-xs transition shadow-lg';
         alertBox.classList.remove('hidden');
         gotoLabStep(3);
       }
@@ -1505,10 +1506,10 @@
     function gotoLabStep(num) {
       for (let i = 1; i <= 4; i++) {
         document.getElementById(`lab-step-${i}`).classList.add('hidden');
-        document.getElementById(`lab-step-btn-${i}`).className = 'py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center';
+        document.getElementById(`lab-step-btn-${i}`).className = 'py-2.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 flex flex-col items-center';
       }
       document.getElementById(`lab-step-${num}`).classList.remove('hidden');
-      document.getElementById(`lab-step-btn-${num}`).className = 'py-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center';
+      document.getElementById(`lab-step-btn-${num}`).className = 'py-2.5 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 flex flex-col items-center';
       if (num === 3) runClassicSim();
     }
 
@@ -1524,10 +1525,10 @@
       const div = document.getElementById('quiz-result-box');
       div.classList.remove('hidden');
       if (data.passed) {
-        div.className = 'p-4 rounded-xl text-sm bg-emerald-950 border border-emerald-500 text-emerald-300';
+        div.className = 'p-3 rounded-xl text-xs bg-emerald-950 border border-emerald-500 text-emerald-300';
         div.innerHTML = `<strong>Natija: ${data.score_percent}%</strong> — ${data.message} <button onclick="gotoLabStep(3)" class="ml-2 font-bold underline">Simulyatorga o'tish →</button>`;
       } else {
-        div.className = 'p-4 rounded-xl text-sm bg-red-950 border border-red-500 text-red-300';
+        div.className = 'p-3 rounded-xl text-xs bg-red-950 border border-red-500 text-red-300';
         div.innerHTML = `<strong>Natija: ${data.score_percent}%</strong> — ${data.message}`;
       }
     }
@@ -1546,10 +1547,10 @@
 
       document.getElementById('fa_saved').innerText = (d.monthly_burn_rate_saved / 1000000).toFixed(1) + (currentLang==='uz'?" mln so'm":"m UZS");
       document.getElementById('fa_cf').innerText = (d.final_cash_flow / 1000000).toFixed(1) + (currentLang==='uz'?" mln so'm":"m UZS");
-      document.getElementById('fa_cf').className = d.final_cash_flow > 0 ? "text-emerald-400 font-bold font-mono text-lg" : "text-red-400 font-bold font-mono text-lg";
+      document.getElementById('fa_cf').className = d.final_cash_flow > 0 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
       const v = document.getElementById('fa_verdict');
       v.innerText = d.verdict;
-      v.className = d.is_recovered ? "p-3.5 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-600 font-bold text-center mt-2" : "p-3.5 rounded-xl bg-red-950 text-red-300 border border-red-600 font-bold text-center mt-2";
+      v.className = d.is_recovered ? "p-3 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-600 font-bold" : "p-3 rounded-lg bg-red-950 text-red-300 border border-red-600 font-bold";
     }
 
     // 4. OPTIMAL ZAXIRA (EOQ)
@@ -1622,7 +1623,7 @@
       document.getElementById('pr_price').innerText = d.new_price.toLocaleString() + (currentLang==='uz'?" so'm":" UZS");
       document.getElementById('pr_vol').innerText = d.new_volume.toLocaleString() + (currentLang==='uz'?" dona ":" units ") + "(" + d.volume_change_pct + "%)";
       document.getElementById('pr_profit').innerText = (d.profit_delta >= 0 ? '+' : '') + (d.profit_delta / 1000000).toFixed(1) + (currentLang==='uz'?" mln so'm":"m UZS");
-      document.getElementById('pr_profit').className = d.profit_delta >= 0 ? "text-emerald-400 font-bold font-mono text-lg" : "text-red-400 font-bold font-mono text-lg";
+      document.getElementById('pr_profit').className = d.profit_delta >= 0 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
     }
 
     // 6. IQTISODIY XAVFSIZLIK
@@ -1640,7 +1641,7 @@
       document.getElementById('sec_score').innerText = d.survival_score + " / 100";
       const s = document.getElementById('sec_status');
       s.innerText = currentLang==='uz'?`Holat: ${d.risk_status} (Qoplash: ${d.coverage_ratio}%)`:`Status: ${d.risk_status} (Coverage: ${d.coverage_ratio}%)`;
-      s.className = d.survival_score >= 70 ? "p-3.5 rounded-xl bg-emerald-950 text-emerald-300 font-bold text-center" : (d.survival_score >= 40 ? "p-3.5 rounded-xl bg-amber-950 text-amber-300 font-bold text-center" : "p-3.5 rounded-xl bg-red-950 text-red-300 font-bold text-center");
+      s.className = d.survival_score >= 70 ? "p-3 rounded-lg bg-emerald-950 text-emerald-300 font-bold" : (d.survival_score >= 40 ? "p-3 rounded-lg bg-amber-950 text-amber-300 font-bold" : "p-3 rounded-lg bg-red-950 text-red-300 font-bold");
     }
 
     // 7. BOSHQARUV KENGASHI EVALUATION
@@ -1677,12 +1678,12 @@
 
       d.reviews.forEach(r => {
         c.innerHTML += `
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-1.5 text-sm">
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 text-xs">
             <div class="flex justify-between items-center">
-              <div><strong class="text-white text-base">${r.role}</strong> <span class="text-slate-400 text-xs">(${r.name})</span></div>
-              <span class="px-2.5 py-1 rounded text-xs font-bold font-mono bg-${r.color}-950 text-${r.color}-400 border border-${r.color}-800">${r.status}</span>
+              <div><strong class="text-white">${r.role}</strong> <span class="text-slate-500">(${r.name})</span></div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-${r.color}-950 text-${r.color}-400 border border-${r.color}-800">${r.status}</span>
             </div>
-            <p class="text-slate-300 text-sm leading-relaxed">${r.comment}</p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${r.comment}</p>
           </div>
         `;
         pC.innerHTML += `<div><strong>${r.role}:</strong> ${r.status} — ${r.comment}</div>`;
@@ -1701,9 +1702,9 @@
             backgroundColor: 'rgba(245, 158, 11, 0.1)',
             fill: true,
             tension: 0.35,
-            borderWidth: 2.5,
+            borderWidth: 2,
             pointBackgroundColor: '#f59e0b',
-            pointRadius: 5
+            pointRadius: 4
           }]
         },
         options: {
@@ -1711,8 +1712,8 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            y: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { color: '#1e293b' } },
-            x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } }
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
           }
         }
       });
