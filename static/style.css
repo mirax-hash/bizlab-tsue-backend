@@ -1,0 +1,74 @@
+/**
+ * BIZLAB TSUE PRO — tsue.uz University Design System
+ * Toshkent Davlat Iqtisodiyot Universiteti
+ */
+
+:root {
+  --color-primary: #0B2545;       /* TDIU Academic Navy */
+  --color-primary-dark: #07182E;  /* Top bar & Footer Dark */
+  --color-primary-light: #0D3B66; /* Hover Navy */
+  --color-accent-blue: #0284C7;   /* Secondary Sky Blue */
+  --color-accent-gold: #D4AF37;   /* University Gold */
+  --color-accent-amber: #D97706;  /* Warm Amber */
+  --color-bg-main: #F8FAFC;       /* Light Canvas */
+  --color-surface: #FFFFFF;       /* Card White */
+  --color-border: #E2E8F0;        /* Subtle Border */
+  --color-text-main: #0F172A;     /* Primary Text */
+  --color-text-muted: #64748B;    /* Secondary Text */
+}
+
+/* Base styles */
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Card styling conforming to tsue.uz */
+.tsue-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.tsue-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 6px -1px rgba(11, 37, 69, 0.08);
+}
+
+/* Primary University Button */
+.btn-tsue-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-tsue-primary:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* Badge styling */
+.badge-tsue {
+  background-color: #eff6ff;
+  color: var(--color-primary);
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Print Optimization */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

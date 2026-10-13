@@ -1,0 +1,99 @@
+/**
+ * BIZLAB TSUE PRO — Production Grade Laboratory Design System
+ * Clean, High-Precision, Academic & Professional SaaS UI
+ */
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --color-primary: #0B2545;
+  --color-primary-dark: #07182E;
+  --color-primary-light: #133E68;
+  --color-accent-amber: #F59E0B;
+  --color-accent-blue: #0284C7;
+  --color-accent-emerald: #10B981;
+  --color-accent-rose: #EF4444;
+  
+  --color-bg-base: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-main: #0F172A;
+  --color-text-muted: #64748B;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Smooth Tab Transitions */
+.view-panel {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card aesthetics */
+.biz-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.biz-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+}
+
+/* Scrollbars */
+.chat-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom Sliders */
+input[type=range] {
+  height: 6px;
+  border-radius: 9999px;
+}
+
+/* Dedicated Print System: Only .print-active is shown when printing */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .print-active,
+  .print-active * {
+    visibility: visible !important;
+  }
+  .print-active {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 28px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    z-index: 999999 !important;
+    box-shadow: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

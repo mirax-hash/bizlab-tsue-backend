@@ -1,34 +1,46 @@
 import os
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.endpoints import router as api_router
+from pathlib import Path
+from fastapi import FastAPI, Response
+from fastapi.responses import FileResponse, HTMLResponse
 
-app = FastAPI(title="BIZLAB TSUE PRO", version="2.0.0")
+app = FastAPI(title="BIZLAB TSUE PRO")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.include_router(api_router, prefix="/api/v1")
-
-# Static fayllar
-static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+# Fayllarni ~/bizlab-backend yoki app/ papkasidan qidirish
+def find_file(filename: str) -> Path | None:
+    candidates = [
+        Path(os.getcwd()) / filename,
+        Path(__file__).resolve().parent / filename,
+        Path(__file__).resolve().parent.parent / filename,
+    ]
+    for p in candidates:
+        if p.is_file():
+            return p
+    return None
 
 @app.api_route("/", methods=["GET", "HEAD"])
-async def root():
-    index_path = os.path.join(static_dir, "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
-    return {"message": "BIZLAB TSUE PRO Backend Active"}
+async def read_index():
+    target = find_file("index.html")
+    if target:
+        return FileResponse(str(target), media_type="text/html")
+    return HTMLResponse("<h2>index.html fayli topilmadi. Faylni loyiha papkasiga joylashtiring.</h2>", status_code=404)
 
-@app.api_route("/health", methods=["GET", "HEAD"])
-async def health():
-    return {"status": "healthy"}
+@app.api_route("/style.css", methods=["GET", "HEAD"])
+async def get_style():
+    target = find_file("style.css")
+    if target:
+        return FileResponse(str(target), media_type="text/css")
+    return Response(content="", media_type="text/css", status_code=404)
+
+@app.api_route("/script.js", methods=["GET", "HEAD"])
+async def get_script():
+    target = find_file("script.js")
+    if target:
+        return FileResponse(str(target), media_type="application/javascript")
+    return Response(content="", media_type="application/javascript", status_code=404)
+
+@app.api_route("/favicon.ico", methods=["GET", "HEAD"])
+async def favicon():
+    target = find_file("favicon.ico")
+    if target:
+        return FileResponse(str(target))
+    return Response(status_code=204)
